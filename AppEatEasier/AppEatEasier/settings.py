@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     # My Own Apps
+    'App_Recipe_Mgmt',
+    'App_SprMkt_Mgmt',
+    'App_User_Mgmt',
 ]
 
 MIDDLEWARE = [

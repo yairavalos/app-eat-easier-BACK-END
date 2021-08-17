@@ -19,11 +19,11 @@ from django.contrib import admin
 from django.urls import path, include
 
 # Views:
-from .views import CoreListAPIView
+from .views import CoreAPIView, CoreListAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/core/', CoreListAPIView.as_view()),
+    path('api/core/', CoreAPIView.as_view()),
     path('api/users/', include('App_User_Mgmt.urls')),
     path('api/recipes/', include('App_Recipe_Mgmt.urls')),
     path('api/sprmkt/', include('App_SprMkt_Mgmt.urls')),

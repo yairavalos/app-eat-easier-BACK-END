@@ -12,7 +12,11 @@ class RecipeCategory(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    category = models.CharField(max_length=150)
+    category = models.CharField(max_length=150, unique=True)
+
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.category}'
 
 
 class CatalogRecipe(models.Model):
@@ -23,8 +27,8 @@ class CatalogRecipe(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    category_id = models.ForeignKey()
-    title = models.CharField(max_length=150)
+    category_id = models.ForeignKey(RecipeCategory, related_name='recipes')
+    title = models.CharField(max_length=150, unique=True)
 
     MEAL_TYPES = (
         ('desayuno'),
@@ -49,12 +53,32 @@ class CatalogRecipe(models.Model):
     )
 
     level_id = models.CharField(max_length=30, choices=LEVEL_TYPES)
+
+    KITAPPS_LIST = (
+        ('Olla de Presion'),
+        ('Licuadora'),
+        ('Microondas'),
+        ('Horno'),
+        ('Procesador'),
+        ('Estufa'),
+    )
+
+    # Needs to validate the field type in django
+    apps_list = models.JSONField(Choices=KITAPPS_LIST)
     
     # Need to validate the field type in django
     pic_url = models.CharField()
 
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.title}'
 
-class IngredientsRecipe(models.Model):
+
+# Import between Apps
+# to relate Foreign Keys
+from App_SprMkt_Mgmt.models import CatalogIngredient, UnitsConvertion
+
+class RecipeIngredient(models.Model):
 
     """
     Table to contain the regarding Ingredients per Recipe
@@ -62,13 +86,17 @@ class IngredientsRecipe(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    recipe_id = models.ForeignKey()
-    ingredient_id = models.ForeignKey()
+    recipe_id = models.ForeignKey(CatalogRecipe, related_name='recipe_ingredients')
+    ingredient_id = models.ForeignKey(CatalogIngredient, related_name='recipe_ingredients')
     ingredient_qty = models.FloatField()
-    unit_id = models.ForeignKey()
+    unit_id = models.ForeignKey(UnitsConvertion)
 
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.ingredient_id}'
+ 
 
-class ProcedureRecipe(models.Model):
+class RecipeProcedure(models.Model):
 
     """
     Table to contain the regarding step to process every Recipe
@@ -76,9 +104,12 @@ class ProcedureRecipe(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    recipe_id = models.ForeignKey()
+    recipe_id = models.ForeignKey(CatalogRecipe, related_name='recipe_procedures')
     proc_descrip = models.TextField()
     
     # Need to validate the field type in django
     pic_url = models.CharField()
 
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.proc_descrip}'

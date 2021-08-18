@@ -12,7 +12,7 @@ class UnitsConvertion(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    equivalency = models.CharField(max_length=50)
+    equivalency = models.CharField(max_length=50, unique=True)
     unit_value = models.FloatField()
 
     UNITS_DESC = (
@@ -30,9 +30,12 @@ class UnitsConvertion(models.Model):
     )
     unit_type = models.CharField(max_length=50, choices=UNITS_TYPE)
 
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.equivalency}'
 
 
-class CatalogPackages(models.Model):
+class CatalogPackage(models.Model):
 
     """
     Table to refer to The Package´s Catalog
@@ -40,7 +43,7 @@ class CatalogPackages(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    package_desc = models.CharField(max_length=50)
+    package_desc = models.CharField(max_length=50, unique=True)
     moq_value = models.FloatField()
 
     CONT_TYPE = (
@@ -51,19 +54,12 @@ class CatalogPackages(models.Model):
 
     container_type = models.CharField()
 
-
-class SprmktDept(models.Model):
- 
-    """
-    Table to represent a Dictionary to set a classification on Super Market Deparment
-
-    Manager privileges needed to load this table through Admin interface
-    """
-
-    category_desc = models.CharField(max_length=50)
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.package_desc}'
 
 
-class CatalogIngredients(models.Model):
+class CatalogIngredient(models.Model):
 
     """
     Table to represent The Ingredient´s Catalog used for Recipe´s Catalog and Supermarket Catalog
@@ -84,10 +80,29 @@ class CatalogIngredients(models.Model):
     )
 
     ingredient_cat = models.CharField(max_length=100, choices=INGREDIENT_TYPES)
-    ingredient_name = models.CharField(max_length=100)
+    ingredient_name = models.CharField(max_length=100, unique=True)
     ingredient_cal = models.FloatField()
 
-class SprmktPackings(models.Model):
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.ingredient_name}'
+
+class SprmktDept(models.Model):
+ 
+    """
+    Table to represent a Dictionary to set a classification on Super Market Deparment
+
+    Manager privileges needed to load this table through Admin interface
+    """
+
+    category_desc = models.CharField(max_length=50, unique=True)
+
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.category_desc}'
+
+
+class SprmktPackaging(models.Model):
     
     """
     Table to represent The Supermarket´s Catalog
@@ -95,12 +110,20 @@ class SprmktPackings(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    dept_id = models.ForeignKey()
-    ingredient_id = models.ForeignKey()
+    dept_id = models.ForeignKey(SprmktDept, related_name='sprmkt_packs')
+    ingredient_id = models.ForeignKey(CatalogIngredient, related_name='sprmkt_packs')
     spq_value = models.IntegerField()
-    units_id = models.ForeignKey()
-    package_id = models.ForeignKey()
+    unit_id = models.ForeignKey(UnitsConvertion, related_name='sprmkt_packs')
+    package_id = models.ForeignKey(CatalogPackage, related_name='sprmkt_packs')
 
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.spq_value} {self.unit_id} {self.package_id}'
+
+
+# Import between Apps
+# Required to obtain menu id to link it to the Foreign Key
+from App_User_Mgmt.models import UserMenu
 
 class SprmktList(models.Model):
 
@@ -110,11 +133,14 @@ class SprmktList(models.Model):
     This table data its going to be loaded automatically by the business logic
     """
 
-    menu_id = models.ForeignKey()
+    menu_id = models.ForeignKey(UserMenu, related_name='sprmkt_lists')
     qty = models.IntegerField()
-    stock_id = models.ForeignKey()
+    stock_id = models.ForeignKey(SprmktPackaging, related_name='sprmkt_lists')
 
     # The following fields needs to be validated
-    inventory = models.BooleanField()
-    purchase = models.BooleanField()
+    inventory = models.BooleanField(default=False)
+    purchase = models.BooleanField(default=False)
 
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.qty} {self.stock_id}'

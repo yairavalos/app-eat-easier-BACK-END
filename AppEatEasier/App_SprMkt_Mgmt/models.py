@@ -1,6 +1,7 @@
 # Standard Libraries and Packages:
 
 from django.db import models
+from django.db.models.deletion import PROTECT
 
 # Create your models here.
 
@@ -110,11 +111,11 @@ class SprmktPackaging(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    dept_id = models.ForeignKey(SprmktDept, related_name='sprmkt_packs')
-    ingredient_id = models.ForeignKey(CatalogIngredient, related_name='sprmkt_packs')
+    dept_id = models.ForeignKey(SprmktDept, on_delete=PROTECT,related_name='sprmkt_packs')
+    ingredient_id = models.ForeignKey(CatalogIngredient, on_delete=PROTECT,related_name='sprmkt_packs')
     spq_value = models.IntegerField()
-    unit_id = models.ForeignKey(UnitsConvertion, related_name='sprmkt_packs')
-    package_id = models.ForeignKey(CatalogPackage, related_name='sprmkt_packs')
+    unit_id = models.ForeignKey(UnitsConvertion, on_delete=PROTECT,related_name='sprmkt_packs')
+    package_id = models.ForeignKey(CatalogPackage, on_delete=PROTECT,related_name='sprmkt_packs')
 
     # String function to get a readable object description
     def __str__(self) -> str:
@@ -133,9 +134,9 @@ class SprmktList(models.Model):
     This table data its going to be loaded automatically by the business logic
     """
 
-    menu_id = models.ForeignKey(UserMenu, related_name='sprmkt_lists')
+    menu_id = models.ForeignKey(UserMenu, on_delete=PROTECT,related_name='sprmkt_lists')
     qty = models.IntegerField()
-    stock_id = models.ForeignKey(SprmktPackaging, related_name='sprmkt_lists')
+    stock_id = models.ForeignKey(SprmktPackaging, on_delete=PROTECT,related_name='sprmkt_lists')
 
     # The following fields needs to be validated
     inventory = models.BooleanField(default=False)

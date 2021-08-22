@@ -1,6 +1,7 @@
 # Standard Libraries and Packages
 
 from django.db import models
+from django.db.models.deletion import PROTECT
 
 # Create your models here.
 
@@ -28,7 +29,7 @@ class CatalogRecipe(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    recipe_category = models.ForeignKey(RecipeCategory, related_name='recipes')
+    recipe_category = models.ForeignKey(RecipeCategory, on_delete=PROTECT, related_name='recipes')
     title = models.CharField(max_length=150, unique=True)
 
     MEAL_TYPES = (
@@ -82,7 +83,7 @@ class RecipeApp(models.Model):
     Manager privileges needed to load this table through Admin Interface
     """
 
-    cat_recipe = models.ForeignKey(CatalogRecipe, related_name='recipe_apps')
+    cat_recipe = models.ForeignKey(CatalogRecipe, on_delete=PROTECT, related_name='recipe_apps')
     apps_name = models.CharField(max_length=30)
     apps_main = models.BooleanField(default=False)
     
@@ -103,10 +104,10 @@ class RecipeIngredient(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    cat_recipe = models.ForeignKey(CatalogRecipe, related_name='recipe_ingredients')
-    cat_ingredient = models.ForeignKey(CatalogIngredient, related_name='recipe_ingredients')
+    cat_recipe = models.ForeignKey(CatalogRecipe, on_delete=PROTECT,related_name='recipe_ingredients')
+    cat_ingredient = models.ForeignKey(CatalogIngredient, on_delete=PROTECT,related_name='recipe_ingredients')
     ingredient_qty = models.FloatField()
-    unit_id = models.ForeignKey(UnitsConvertion)
+    unit_type = models.ForeignKey(UnitsConvertion, on_delete=PROTECT, related_name='recipe_ingredients')
 
     # String function to get a readable object description
     def __str__(self) -> str:
@@ -121,7 +122,7 @@ class RecipeProcedure(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    cat_recipe = models.ForeignKey(CatalogRecipe, related_name='recipe_procedures')
+    cat_recipe = models.ForeignKey(CatalogRecipe, on_delete=PROTECT,related_name='recipe_procedures')
     proc_descrip = models.TextField()
     
     # Need to validate the field type in django

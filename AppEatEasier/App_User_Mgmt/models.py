@@ -42,7 +42,7 @@ class UserFood(models.Model):
     This table data its going to be loaded from the Front-End Side
     """
 
-    my_user = models.ForeignKey(User, related_name='user_foods')
+    my_user = models.ForeignKey(User, on_delete=PROTECT,related_name='user_foods')
     
     FOOD_TYPES = (
         ('Res'),
@@ -71,7 +71,7 @@ class UserApp(models.Model):
     This table data its going to be loaded from the Front-End Side
     """
 
-    my_user = models.ForeignKey(User, related_name='user_apps')
+    my_user = models.ForeignKey(User, on_delete=PROTECT,related_name='user_apps')
     
     APPS_TYPES = (
         ('Olla de Presion'),
@@ -101,8 +101,8 @@ class UserRecipe(models.Model):
     """
 
     # This field its sensitive, relation must be one to one from Auth User Table
-    user_profile = models.ForeignKey(UserProfile, related_name='user_recipes')
-    cat_recipe = models.ForeignKey(CatalogRecipe, related_name='user_recipes')
+    user_profile = models.ForeignKey(UserProfile, on_delete=PROTECT,related_name='user_recipes')
+    cat_recipe = models.ForeignKey(CatalogRecipe, on_delete=PROTECT,related_name='user_recipes')
     checked = models.BooleanField(default=False)
     favorite = models.BooleanField(default=False)
 
@@ -120,7 +120,7 @@ class UserPlanner(models.Model):
     """
 
     # This field its sensitive, relation must be one to one from Auth User Table
-    user_profile = models.ForeignKey(UserProfile, related_name='user_planners')
+    user_profile = models.ForeignKey(UserProfile, on_delete=PROTECT,related_name='user_planners')
     plan_title = models.CharField(max_length=150, unique=True)
     week_num = models.IntegerField()
     
@@ -150,7 +150,7 @@ class UserMenu(models.Model):
     This table data its going to be loaded from the Front-End Side
     """
 
-    user_planner = models.ForeignKey(UserPlanner, related_name='user_menus')
+    user_planner = models.ForeignKey(UserPlanner, on_delete=PROTECT,related_name='user_menus')
     meal_date = models.DateField()
 
     MEAL_TYPES = (
@@ -162,7 +162,7 @@ class UserMenu(models.Model):
     )
 
     meal_type = models.CharField(max_length=20, choices=MEAL_TYPES)
-    user_recipe = models.ForeignKey(UserRecipe, related_name='user_menus')
+    user_recipe = models.ForeignKey(UserRecipe, on_delete=PROTECT,related_name='user_menus')
     
     # This field type needs to be validated
     done = models.BooleanField(default=False)

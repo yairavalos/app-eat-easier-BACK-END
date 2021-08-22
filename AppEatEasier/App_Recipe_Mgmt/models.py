@@ -33,42 +33,31 @@ class CatalogRecipe(models.Model):
     title = models.CharField(max_length=150, unique=True)
 
     MEAL_TYPES = (
-        ('desayuno'),
-        ('brunch'),
-        ('comida'),
-        ('merienda'),
-        ('cena'),
+        ('desayuno','Desayuno'),
+        ('brunch','Brunch'),
+        ('comida','Comida'),
+        ('merienda','Merienda'),
+        ('cena','Cena'),
     )
 
     meal_type = models.CharField(max_length=30, choices=MEAL_TYPES)
     description = models.TextField()
-    n_eats = models.IntegerField()
+    persons = models.IntegerField()
 
     # This fields needs to be in minutes
     # Validate if doesn´t need to be into units convertion table
     time_prep = models.IntegerField()
 
     LEVEL_TYPES = (
-        ('Alta'),
-        ('Media'),
-        ('Baja'),
+        ('alta','Alta'),
+        ('media','Media'),
+        ('baja','Baja'),
     )
-    level_id = models.CharField(max_length=30, choices=LEVEL_TYPES)
-
-    APPS_TYPES = (
-        ('Olla de Presion'),
-        ('Licuadora'),
-        ('Microondas'),
-        ('Horno'),
-        ('Procesador'),
-        ('Estufa'),
-    )
-
-    # Needs to validate the field type in django
-    apps_list = models.CharField(max_length=30, choices=APPS_TYPES)
     
+    level = models.CharField(max_length=30, choices=LEVEL_TYPES)
+
     # Need to validate the field type in django
-    pic_url = models.CharField()
+    pic_url = models.CharField(max_length=250)
 
     # String function to get a readable object description
     def __str__(self) -> str:
@@ -84,7 +73,17 @@ class RecipeApp(models.Model):
     """
 
     cat_recipe = models.ForeignKey(CatalogRecipe, on_delete=PROTECT, related_name='recipe_apps')
-    apps_name = models.CharField(max_length=30)
+
+    APPS_TYPES = (
+        ('olla de presion','Olla de Presión'),
+        ('licuadora','Licuadora'),
+        ('microondas','Microondas'),
+        ('horno','Horno'),
+        ('procesador','Procesador'),
+        ('estufa','Estufa'),
+    )
+
+    apps_type = models.CharField(max_length=30, choices=APPS_TYPES)
     apps_main = models.BooleanField(default=False)
     
     # String function to get a readable object description
@@ -126,7 +125,7 @@ class RecipeProcedure(models.Model):
     proc_descrip = models.TextField()
     
     # Need to validate the field type in django
-    pic_url = models.CharField()
+    pic_url = models.CharField(max_length=250)
 
     # String function to get a readable object description
     def __str__(self) -> str:

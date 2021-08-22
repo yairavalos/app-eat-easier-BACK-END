@@ -17,17 +17,17 @@ class UnitsConvertion(models.Model):
     unit_value = models.FloatField()
 
     UNITS_DESC = (
-        ('mililitros'),
-        ('miligramos'),
-        ('litros'),
-        ('kilogramos'),
+        ('ml','mililitros'),
+        ('mg','miligramos'),
+        ('l','litros'),
+        ('kg','kilogramos'),
     )
 
     unit_desc = models.CharField(max_length=50, choices=UNITS_DESC)
 
     UNITS_TYPE = (
-        ('custom'),
-        ('SI'),
+        ('custom','Informal'),
+        ('SI','Sistema Internacional de Unidades'),
     )
     unit_type = models.CharField(max_length=50, choices=UNITS_TYPE)
 
@@ -48,12 +48,12 @@ class CatalogPackage(models.Model):
     moq_value = models.FloatField()
 
     CONT_TYPE = (
-        ('Wrapping'),
-        ('Container'),
-        ('Bulk'),
+        ('wrapping','Wrapping'),
+        ('container','Container'),
+        ('bulk','Bulk'),
     )
 
-    container_type = models.CharField()
+    container_type = models.CharField(max_length=30, choices=CONT_TYPE)
 
     # String function to get a readable object description
     def __str__(self) -> str:
@@ -69,15 +69,15 @@ class CatalogIngredient(models.Model):
     """
 
     FOOD_TYPES = (
-        ('Res'),
-        ('Pollo'),
-        ('Cerdo'),
-        ('Pescado'),
-        ('Huevo'),
-        ('Lacteos'),
-        ('Frutas'),
-        ('Verduras'),
-        ('Gluten'),
+        ('res','Res'),
+        ('pollo','Pollo'),
+        ('cerdo','Cerdo'),
+        ('pescado','Pescado'),
+        ('huevo','Huevo'),
+        ('lacteos','Lacteos'),
+        ('frutas','Frutas'),
+        ('verduras','Verduras'),
+        ('gluten','Gluten'),
     )
 
     ingredient_cat = models.CharField(max_length=100, choices=FOOD_TYPES)
@@ -111,11 +111,11 @@ class SprmktPackaging(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    dept_id = models.ForeignKey(SprmktDept, on_delete=PROTECT,related_name='sprmkt_packs')
-    ingredient_id = models.ForeignKey(CatalogIngredient, on_delete=PROTECT,related_name='sprmkt_packs')
+    department = models.ForeignKey(SprmktDept, on_delete=PROTECT,related_name='sprmkt_packs')
+    ingredient = models.ForeignKey(CatalogIngredient, on_delete=PROTECT,related_name='sprmkt_packs')
     spq_value = models.IntegerField()
-    unit_id = models.ForeignKey(UnitsConvertion, on_delete=PROTECT,related_name='sprmkt_packs')
-    package_id = models.ForeignKey(CatalogPackage, on_delete=PROTECT,related_name='sprmkt_packs')
+    unit_type = models.ForeignKey(UnitsConvertion, on_delete=PROTECT,related_name='sprmkt_packs')
+    package_type = models.ForeignKey(CatalogPackage, on_delete=PROTECT,related_name='sprmkt_packs')
 
     # String function to get a readable object description
     def __str__(self) -> str:

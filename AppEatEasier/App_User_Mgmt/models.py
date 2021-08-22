@@ -28,6 +28,10 @@ class UserProfile(models.Model):
     
     adults_qty = models.IntegerField()
     child_qty = models.IntegerField()
+ 
+    # Some ideas to add and improve the profile
+    # Some user logs
+    # some stats
 
     # String function to get a readable object description
     def __str__(self) -> str:
@@ -42,18 +46,18 @@ class UserFood(models.Model):
     This table data its going to be loaded from the Front-End Side
     """
 
-    my_user = models.ForeignKey(User, on_delete=PROTECT,related_name='user_foods')
+    my_user = models.ForeignKey(global_settings.AUTH_USER_MODEL, on_delete=PROTECT,related_name='user_foods')
     
     FOOD_TYPES = (
-        ('Res'),
-        ('Pollo'),
-        ('Cerdo'),
-        ('Pescado'),
-        ('Huevo'),
-        ('Lacteos'),
-        ('Frutas'),
-        ('Verduras'),
-        ('Gluten'),
+        ('res','Res'),
+        ('pollo','Pollo'),
+        ('cerdo','Cerdo'),
+        ('pescado','Pescado'),
+        ('huevo','Huevo'),
+        ('lacteos','Lacteos'),
+        ('frutas','Frutas'),
+        ('verduras','Verduras'),
+        ('gluten','Gluten'),
     )
 
     food_type = models.CharField(max_length=30, choices=FOOD_TYPES)
@@ -71,15 +75,15 @@ class UserApp(models.Model):
     This table data its going to be loaded from the Front-End Side
     """
 
-    my_user = models.ForeignKey(User, on_delete=PROTECT,related_name='user_apps')
+    my_user = models.ForeignKey(global_settings.AUTH_USER_MODEL, on_delete=PROTECT,related_name='user_apps')
     
     APPS_TYPES = (
-        ('Olla de Presion'),
-        ('Licuadora'),
-        ('Microondas'),
-        ('Horno'),
-        ('Procesador'),
-        ('Estufa'),
+        ('olla de presion','Olla de Presión'),
+        ('licuadora','Licuadora'),
+        ('microondas','Microondas'),
+        ('horno','Horno'),
+        ('procesador','Procesador'),
+        ('estufa','Estufa'),
     )
     
     app_name = models.CharField(max_length=30, choices=APPS_TYPES)
@@ -101,7 +105,7 @@ class UserRecipe(models.Model):
     """
 
     # This field its sensitive, relation must be one to one from Auth User Table
-    user_profile = models.ForeignKey(UserProfile, on_delete=PROTECT,related_name='user_recipes')
+    user_profile = models.ForeignKey(global_settings.AUTH_USER_MODEL, on_delete=PROTECT,related_name='user_recipes')
     cat_recipe = models.ForeignKey(CatalogRecipe, on_delete=PROTECT,related_name='user_recipes')
     checked = models.BooleanField(default=False)
     favorite = models.BooleanField(default=False)
@@ -120,13 +124,13 @@ class UserPlanner(models.Model):
     """
 
     # This field its sensitive, relation must be one to one from Auth User Table
-    user_profile = models.ForeignKey(UserProfile, on_delete=PROTECT,related_name='user_planners')
+    user_profile = models.ForeignKey(global_settings.AUTH_USER_MODEL, on_delete=PROTECT,related_name='user_planners')
     plan_title = models.CharField(max_length=150, unique=True)
     week_num = models.IntegerField()
     
     PERIOD_TYPES = (
-        ('semanal'),
-        ('quincenal'),
+        ('semanal','Semanal'),
+        ('quincenal','Quincenal'),
     )
     
     period = models.CharField(max_length=30, choices=PERIOD_TYPES)
@@ -135,7 +139,7 @@ class UserPlanner(models.Model):
     end_date = models.DateField()
 
     # Confirmation from the user to save this plan for further reusability
-    saved = models.CharField()
+    saved = models.BooleanField(default=False)
 
     # String function to get a readable object description
     def __str__(self) -> str:
@@ -154,11 +158,11 @@ class UserMenu(models.Model):
     meal_date = models.DateField()
 
     MEAL_TYPES = (
-        ('desayuno'),
-        ('brunch'),
-        ('comida'),
-        ('merienda'),
-        ('cena'),
+        ('desayuno','Desayuno'),
+        ('brunch','Brunch'),
+        ('comida','Comida'),
+        ('merienda','Merienda'),
+        ('cena','Cena'),
     )
 
     meal_type = models.CharField(max_length=20, choices=MEAL_TYPES)

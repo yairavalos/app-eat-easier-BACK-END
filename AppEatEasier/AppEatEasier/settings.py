@@ -85,16 +85,27 @@ WSGI_APPLICATION = 'AppEatEasier.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# For testing purposes
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
+        'ENGINE': 'django.db.backends.sqlite3', # <<< -- Falta cambiar esto
+        'NAME': BASE_DIR / 'db.sqlite3', # <<< --- cambiar este, como NO es en red lo demás se puede comentar | DEBE ser la dirección | BASE_DIR / "db.sqlite3"
+    }
+}
+
+# For production purposes
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # <<< -- Falta cambiar esto
+        'NAME': os.getenv("DB_NAME"), # <<< --- cambiar este, como NO es en red lo demás se puede comentar | DEBE ser la dirección | BASE_DIR / "db.sqlite3"
+        'USER': os.getenv("DB_USER"), # no lo va a necesitar para sqlite
         'PASSWORD': os.getenv("DB_PASSWORD"),
         'HOST': os.getenv("DB_HOST"),
         'PORT': os.getenv("DB_PORT"),
     }
 }
+"""
 
 
 # Password validation

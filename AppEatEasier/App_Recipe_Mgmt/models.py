@@ -12,6 +12,7 @@ class RecipeCategory(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
+    # We need to validate this
     category = models.CharField(max_length=150, unique=True)
 
     # String function to get a readable object description
@@ -27,7 +28,7 @@ class CatalogRecipe(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    category_id = models.ForeignKey(RecipeCategory, related_name='recipes')
+    recipe_category = models.ForeignKey(RecipeCategory, related_name='recipes')
     title = models.CharField(max_length=150, unique=True)
 
     MEAL_TYPES = (
@@ -47,14 +48,13 @@ class CatalogRecipe(models.Model):
     time_prep = models.IntegerField()
 
     LEVEL_TYPES = (
-        ('facil'),
-        ('intermedio'),
-        ('dificil'),
+        ('Alta'),
+        ('Media'),
+        ('Baja'),
     )
-
     level_id = models.CharField(max_length=30, choices=LEVEL_TYPES)
 
-    KITAPPS_LIST = (
+    APPS_TYPES = (
         ('Olla de Presion'),
         ('Licuadora'),
         ('Microondas'),
@@ -64,7 +64,7 @@ class CatalogRecipe(models.Model):
     )
 
     # Needs to validate the field type in django
-    apps_list = models.JSONField(Choices=KITAPPS_LIST)
+    apps_list = models.CharField(max_length=30, choices=APPS_TYPES)
     
     # Need to validate the field type in django
     pic_url = models.CharField()
@@ -72,6 +72,23 @@ class CatalogRecipe(models.Model):
     # String function to get a readable object description
     def __str__(self) -> str:
         return f'{self.title}'
+
+
+class RecipeApp(models.Model):
+
+    """
+    Table to contain the regarding appliances required to process the recipe
+
+    Manager privileges needed to load this table through Admin Interface
+    """
+
+    cat_recipe = models.ForeignKey(CatalogRecipe, related_name='recipe_apps')
+    apps_name = models.CharField(max_length=30)
+    apps_main = models.BooleanField(default=False)
+    
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.apps_name}'
 
 
 # Import between Apps
@@ -86,8 +103,8 @@ class RecipeIngredient(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    recipe_id = models.ForeignKey(CatalogRecipe, related_name='recipe_ingredients')
-    ingredient_id = models.ForeignKey(CatalogIngredient, related_name='recipe_ingredients')
+    cat_recipe = models.ForeignKey(CatalogRecipe, related_name='recipe_ingredients')
+    cat_ingredient = models.ForeignKey(CatalogIngredient, related_name='recipe_ingredients')
     ingredient_qty = models.FloatField()
     unit_id = models.ForeignKey(UnitsConvertion)
 
@@ -104,7 +121,7 @@ class RecipeProcedure(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    recipe_id = models.ForeignKey(CatalogRecipe, related_name='recipe_procedures')
+    cat_recipe = models.ForeignKey(CatalogRecipe, related_name='recipe_procedures')
     proc_descrip = models.TextField()
     
     # Need to validate the field type in django

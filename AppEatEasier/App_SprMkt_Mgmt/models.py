@@ -25,7 +25,7 @@ class UnitsConvertion(models.Model):
     unit_desc = models.CharField(max_length=50, choices=UNITS_DESC)
 
     UNITS_TYPE = (
-        ('user'),
+        ('custom'),
         ('SI'),
     )
     unit_type = models.CharField(max_length=50, choices=UNITS_TYPE)
@@ -47,9 +47,9 @@ class CatalogPackage(models.Model):
     moq_value = models.FloatField()
 
     CONT_TYPE = (
-        ('envoltura'),
-        ('contenedor'),
-        ('granel'),
+        ('Wrapping'),
+        ('Container'),
+        ('Bulk'),
     )
 
     container_type = models.CharField()
@@ -67,7 +67,7 @@ class CatalogIngredient(models.Model):
     Manager privileges needed to load this table through Admin interface
     """
 
-    INGREDIENT_TYPES = (
+    FOOD_TYPES = (
         ('Res'),
         ('Pollo'),
         ('Cerdo'),
@@ -79,7 +79,7 @@ class CatalogIngredient(models.Model):
         ('Gluten'),
     )
 
-    ingredient_cat = models.CharField(max_length=100, choices=INGREDIENT_TYPES)
+    ingredient_cat = models.CharField(max_length=100, choices=FOOD_TYPES)
     ingredient_name = models.CharField(max_length=100, unique=True)
     ingredient_cal = models.FloatField()
 

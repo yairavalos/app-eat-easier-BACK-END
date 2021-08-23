@@ -18,7 +18,7 @@ class UnitsConvertion(models.Model):
 
     UNITS_DESC = (
         ('ml','mililitros'),
-        ('mg','miligramos'),
+        ('gm','gramos'),
         ('l','litros'),
         ('kg','kilogramos'),
     )
@@ -26,7 +26,8 @@ class UnitsConvertion(models.Model):
     unit_desc = models.CharField(max_length=50, choices=UNITS_DESC)
 
     UNITS_TYPE = (
-        ('custom','Informal'),
+        ('user','Informal por convención entre usuarios'),
+        ('custom','sugerida por al app, bajo revisión'),
         ('SI','Sistema Internacional de Unidades'),
     )
     unit_type = models.CharField(max_length=50, choices=UNITS_TYPE)
@@ -48,7 +49,7 @@ class CatalogPackage(models.Model):
     moq_value = models.FloatField()
 
     CONT_TYPE = (
-        ('wrapping','Wrapping'),
+        ('pack','Package'),
         ('container','Container'),
         ('bulk','Bulk'),
     )
@@ -78,15 +79,18 @@ class CatalogIngredient(models.Model):
         ('frutas','Frutas'),
         ('verduras','Verduras'),
         ('gluten','Gluten'),
+        ('gluten free','Sin Gluten'),
+        ('cereales, semillas y leguminosas','Cereales, Semillas y Leguminosas'),
+        ('especias, condimentos y salsas','Especias, Condimentos y Salsas'),
     )
 
     ingredient_cat = models.CharField(max_length=100, choices=FOOD_TYPES)
     ingredient_name = models.CharField(max_length=100, unique=True)
-    ingredient_cal = models.FloatField()
 
     # String function to get a readable object description
     def __str__(self) -> str:
         return f'{self.ingredient_name}'
+
 
 class SprmktDept(models.Model):
  
@@ -113,13 +117,20 @@ class SprmktPackaging(models.Model):
 
     department = models.ForeignKey(SprmktDept, on_delete=PROTECT,related_name='sprmkt_packs')
     ingredient = models.ForeignKey(CatalogIngredient, on_delete=PROTECT,related_name='sprmkt_packs')
+    
+    # This field its added to make sense the ingredient status
+    # por ejemplo, papas a la francesa, pimienta molida
+    # additional description -> a la francesa (cortado & frito), molido o en polvo, en gajos, en grano o en rajas, etc.
+    # This field its optional, but sometime needed to make sense lexically speaking
+    additional_desc = models.CharField(max_length=150, blank=True)
+
     spq_value = models.IntegerField()
     unit_type = models.ForeignKey(UnitsConvertion, on_delete=PROTECT,related_name='sprmkt_packs')
     package_type = models.ForeignKey(CatalogPackage, on_delete=PROTECT,related_name='sprmkt_packs')
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.spq_value} {self.unit_id} {self.package_id}'
+        return f'{self.spq_value} {self.unit_type} {self.package_type}'
 
 
 # Import between Apps

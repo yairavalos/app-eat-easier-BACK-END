@@ -24,7 +24,7 @@ class UserProfile(models.Model):
     # user.settings must to be added
     #related name was missing
     # This field its sensitive, relation must be one to one from Auth User Table
-    my_user = models.OneToOneField(global_settings.AUTH_USER_MODEL, on_delete=PROTECT, related_name='user_profiles') 
+    user_profile = models.OneToOneField(global_settings.AUTH_USER_MODEL, on_delete=PROTECT, related_name='user_profiles') 
     
     adults_qty = models.IntegerField()
     child_qty = models.IntegerField()
@@ -35,7 +35,7 @@ class UserProfile(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.user_id}'
+        return f'{self.user_profile}'
 
 
 class UserFood(models.Model):
@@ -46,7 +46,7 @@ class UserFood(models.Model):
     This table data its going to be loaded from the Front-End Side
     """
 
-    my_user = models.ForeignKey(global_settings.AUTH_USER_MODEL, on_delete=PROTECT,related_name='user_foods')
+    user_profile = models.ForeignKey(global_settings.AUTH_USER_MODEL, on_delete=PROTECT,related_name='user_foods')
     
     FOOD_TYPES = (
         ('res','Res'),
@@ -64,7 +64,7 @@ class UserFood(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.food_type}'
+        return f'{self.user_profile} {self.food_type}'
 
 
 class UserApp(models.Model):
@@ -75,7 +75,7 @@ class UserApp(models.Model):
     This table data its going to be loaded from the Front-End Side
     """
 
-    my_user = models.ForeignKey(global_settings.AUTH_USER_MODEL, on_delete=PROTECT,related_name='user_apps')
+    user_profile = models.ForeignKey(global_settings.AUTH_USER_MODEL, on_delete=PROTECT,related_name='user_apps')
     
     APPS_TYPES = (
         ('olla de presion','Olla de Presión'),
@@ -90,7 +90,7 @@ class UserApp(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.user_id}'
+        return f'{self.user_profile} {self.app_name}'
 
 # Import between Apps
 # Needed to relate recipe id foreign key
@@ -112,7 +112,7 @@ class UserRecipe(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.preference_id} {self.recipe_id}'
+        return f'{self.user_profile} {self.cat_recipe}'
 
 
 class UserPlanner(models.Model):
@@ -143,7 +143,7 @@ class UserPlanner(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.plan_title}'
+        return f'{self.user_profile} {self.plan_title}'
 
 
 class UserMenu(models.Model):
@@ -173,4 +173,4 @@ class UserMenu(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.planner_id} {self.meal_date} {self.meal_type}'
+        return f'{self.user_planner} {self.meal_date} {self.meal_type}'

@@ -88,7 +88,7 @@ class RecipeApp(models.Model):
     
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.apps_name}'
+        return f'{self.apps_type}'
 
 
 # Import between Apps
@@ -110,7 +110,7 @@ class RecipeIngredient(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.ingredient_id}'
+        return f'{self.cat_ingredient}'
  
 
 class RecipeProcedure(models.Model):

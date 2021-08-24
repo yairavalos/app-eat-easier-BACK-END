@@ -61,7 +61,7 @@ class CatalogRecipe(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.title}'
+        return f'{self.title} comida {self.recipe_category}'
 
 
 class RecipeApp(models.Model):
@@ -84,11 +84,11 @@ class RecipeApp(models.Model):
     )
 
     apps_type = models.CharField(max_length=30, choices=APPS_TYPES)
-    apps_main = models.BooleanField(default=False)
+    required = models.BooleanField(default=False)
     
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.apps_type}'
+        return f'recipe: {self.cat_recipe} | appliance: {self.apps_type} | required: {"si" if self.required else "no" }'
 
 
 # Import between Apps
@@ -110,7 +110,7 @@ class RecipeIngredient(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.cat_ingredient}'
+        return f'recipe: {self.cat_recipe} | ingredient: {self.cat_ingredient}'
  
 
 class RecipeProcedure(models.Model):
@@ -125,8 +125,8 @@ class RecipeProcedure(models.Model):
     proc_descrip = models.TextField()
     
     # Need to validate the field type in django
-    pic_url = models.CharField(max_length=250)
+    pic_url = models.CharField(max_length=250, blank=True)
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.proc_descrip}'
+        return f'recipe: {self.cat_recipe} | procedure: {self.proc_descrip}'

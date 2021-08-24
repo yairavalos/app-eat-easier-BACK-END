@@ -35,7 +35,7 @@ class UserProfile(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.user_profile}'
+        return f'{self.user_profile} | adult: {self.adults_qty} | child: {self.child_qty}' # validate if .username needs to be added
 
 
 class UserFood(models.Model):
@@ -64,7 +64,7 @@ class UserFood(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.user_profile} {self.food_type}'
+        return f'user: {self.user_profile} | food: {self.food_type}'
 
 
 class UserApp(models.Model):
@@ -90,7 +90,8 @@ class UserApp(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.user_profile} {self.app_name}'
+        return f'user: {self.user_profile} | appliance: {self.app_name}'
+
 
 # Import between Apps
 # Needed to relate recipe id foreign key
@@ -112,7 +113,7 @@ class UserRecipe(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.user_profile} {self.cat_recipe}'
+        return f'user: {self.user_profile} | recipe: {self.cat_recipe} | favorite:{self.favorite}'
 
 
 class UserPlanner(models.Model):
@@ -143,7 +144,7 @@ class UserPlanner(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.user_profile} {self.plan_title}'
+        return f'user: {self.user_profile} | plan title: {self.plan_title} | start: {self.start_date} | end: {self.end_date}'
 
 
 class UserMenu(models.Model):
@@ -173,4 +174,4 @@ class UserMenu(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.user_planner} {self.meal_date} {self.meal_type}'
+        return f'{self.user_planner} | meal date: {self.meal_date} | meal type: {self.meal_type} | {self.user_recipe}'

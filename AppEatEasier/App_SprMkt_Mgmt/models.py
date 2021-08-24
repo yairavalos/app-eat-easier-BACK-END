@@ -130,7 +130,7 @@ class SprmktPackaging(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.spq_value} {self.unit_type} {self.package_type}'
+        return f'{self.ingredient} {self.additional_desc} {self.package_type} de {self.spq_value} {self.unit_type}'
 
 
 # Import between Apps
@@ -145,9 +145,9 @@ class SprmktList(models.Model):
     This table data its going to be loaded automatically by the business logic
     """
 
-    menu_id = models.ForeignKey(UserMenu, on_delete=PROTECT,related_name='sprmkt_lists')
+    user_menu = models.ForeignKey(UserMenu, on_delete=PROTECT,related_name='sprmkt_lists')
     qty = models.IntegerField()
-    stock_id = models.ForeignKey(SprmktPackaging, on_delete=PROTECT,related_name='sprmkt_lists')
+    stock_package = models.ForeignKey(SprmktPackaging, on_delete=PROTECT,related_name='sprmkt_lists')
 
     # The following fields needs to be validated
     inventory = models.BooleanField(default=False)
@@ -155,4 +155,4 @@ class SprmktList(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.qty} {self.stock_id}'
+        return f'{self.qty} {self.stock_package}'

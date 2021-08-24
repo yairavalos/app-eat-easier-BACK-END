@@ -1,0 +1,10 @@
+-- SQLite
+SELECT App_Recipe_Mgmt_catalogrecipe.id, App_Recipe_Mgmt_catalogrecipe.title, App_Recipe_Mgmt_catalogrecipe.meal_type,
+App_Recipe_Mgmt_recipeingredient.id, App_Recipe_Mgmt_recipeingredient.cat_ingredient_id,
+App_SprMkt_Mgmt_catalogingredient.id, App_SprMkt_Mgmt_catalogingredient.ingredient_cat, App_SprMkt_Mgmt_catalogingredient.ingredient_name
+FROM App_Recipe_Mgmt_catalogrecipe
+INNER JOIN App_Recipe_Mgmt_recipeingredient
+ON App_Recipe_Mgmt_recipeingredient.cat_recipe_id = App_Recipe_Mgmt_catalogrecipe.id
+INNER JOIN App_SprMkt_Mgmt_catalogingredient
+ON App_SprMkt_Mgmt_catalogingredient.id = App_Recipe_Mgmt_recipeingredient.cat_ingredient_id
+;

@@ -124,7 +124,7 @@ class SprmktPackaging(models.Model):
     # This field its optional, but sometime needed to make sense lexically speaking
     additional_desc = models.CharField(max_length=150, blank=True)
 
-    spq_value = models.IntegerField()
+    spq_value = models.FloatField()
     unit_type = models.ForeignKey(UnitsConvertion, on_delete=PROTECT,related_name='sprmkt_packs')
     package_type = models.ForeignKey(CatalogPackage, on_delete=PROTECT,related_name='sprmkt_packs')
 

@@ -135,7 +135,7 @@ class SprmktPackaging(models.Model):
 
 # Import between Apps
 # Required to obtain menu id to link it to the Foreign Key
-from App_User_Mgmt.models import UserMenu
+from App_User_Mgmt.models import UserPlanner
 
 class SprmktList(models.Model):
 
@@ -145,7 +145,7 @@ class SprmktList(models.Model):
     This table data its going to be loaded automatically by the business logic
     """
 
-    user_menu = models.ForeignKey(UserMenu, on_delete=PROTECT,related_name='sprmkt_lists')
+    user_planner = models.ForeignKey(UserPlanner, on_delete=PROTECT,related_name='sprmkt_lists')
     qty = models.IntegerField()
     stock_package = models.ForeignKey(SprmktPackaging, on_delete=PROTECT,related_name='sprmkt_lists')
 
@@ -155,4 +155,4 @@ class SprmktList(models.Model):
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.qty} {self.stock_package}'
+        return f'{self.user_planner} | {self.qty} {self.stock_package}'

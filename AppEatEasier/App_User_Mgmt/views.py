@@ -1,7 +1,7 @@
 # Standard Libraries and Packages:
 
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -34,7 +34,8 @@ class UserDetailsRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     """
     This view its purpose its to retrieve full user details
     """
-
+    # pk comes into the request layer and its injected into the queryset that match the criteria
+    # lookup_field by default is pk
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
 
@@ -47,3 +48,21 @@ class UserPlannerListAPIView(generics.ListAPIView):
     queryset = UserPlanner.objects.all()
     serializer_class = UserPlannerListSerializer
 
+
+class UserPlannerIDListAPIView(generics.ListAPIView):
+    """
+    This view its purpose its to list specific User Planner by User ID 
+    """
+
+    # queryset = UserPlanner.objects.filter(user_profile_id='4') / this experiment works well
+    queryset = UserPlanner.objects.all()
+    serializer_class = UserPlannerListSerializer
+
+    def get_queryset(self):
+        user_profile_id = self.kwargs['pk']
+        filters = {}
+
+        if user_profile_id:
+            filters['user_profile_id'] = user_profile_id
+
+        return self.queryset.filter(**filters)

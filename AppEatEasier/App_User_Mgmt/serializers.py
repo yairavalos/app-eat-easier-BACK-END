@@ -30,9 +30,9 @@ class UserPlannerListSerializer(serializers.ModelSerializer):
     """
     This serializer its purpose its to List Users Planners
     """
-
-    user_planners = UserDetailSerializer
+    # OJO !!! hay usar los parentesis al final de la clase por favor !!!
+    user_profile = UserListSerializer()
 
     class Meta:
         model = UserPlanner
-        fields = ['user_profile','plan_title','period','start_date']
+        fields = ['user_profile','id','plan_title','period','start_date']

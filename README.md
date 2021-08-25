@@ -10,3 +10,7 @@ This branch its derived from Branch Dev, in order to create the base template fo
 # On Branch Models
 This branch its derived from Branch Template, in order to create the Models feature and Data Base Foundations
 
+# On Branch End-Points
+This branch its derived from Branch Models, in order to create End-Points features
+This feature require serializers, views and urls
+

@@ -6,7 +6,7 @@ from django.urls import path, include
 # Views:
 from .views import (
     UserAPIView, UserListAPIView, UserDetailsRetrieveUpdateAPIView, 
-    UserPlannerListAPIView, UserPlannerIDListAPIView
+    UserPlannerListAPIView, UserPlannerIDListAPIView, UserPlannerIDDeatilsAPIView,
     )
 
 app_name = "App_User_Mgmt"
@@ -16,6 +16,7 @@ urlpatterns = [
     path('planners/', UserPlannerListAPIView.as_view()),
     path('<int:pk>/', UserDetailsRetrieveUpdateAPIView.as_view()),
     path('<int:pk>/planners/', UserPlannerIDListAPIView.as_view()),
+    path('<int:user_profile_id>/planners/<int:pk>/', UserPlannerIDDeatilsAPIView.as_view()),
 ]
 
 

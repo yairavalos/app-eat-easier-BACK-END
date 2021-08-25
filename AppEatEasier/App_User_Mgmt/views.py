@@ -1,12 +1,11 @@
 # Standard Libraries and Packages:
 
-from django.shortcuts import render
-from rest_framework import generics, serializers
+from rest_framework import generics, serializers, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 # Serializers:
-from .serializers import UserDetailSerializer, UserListSerializer, UserPlannerListSerializer
+from .serializers import UserDetailSerializer, UserListSerializer, UserPlannerListSerializer, UserPlannerDetailSerializer
 
 # Models:
 from .models import User, UserPlanner
@@ -66,3 +65,25 @@ class UserPlannerIDListAPIView(generics.ListAPIView):
             filters['user_profile_id'] = user_profile_id
 
         return self.queryset.filter(**filters)
+
+
+class UserPlannerIDDeatilsAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    This view its purpose its to get a User Planner Detail by User ID
+    """
+
+    queryset = UserPlanner.objects.all()
+    serializer_class = UserPlannerDetailSerializer
+
+    def get_queryset(self):
+
+        user_profile_id = self.kwargs['user_profile_id']
+        plan_id = self.kwargs['pk']
+        filters_dict = {}
+
+        if user_profile_id:
+            filters_dict['user_profile_id'] = user_profile_id
+            filters_dict['id'] = plan_id
+
+        return self.queryset.filter(**filters_dict)
+

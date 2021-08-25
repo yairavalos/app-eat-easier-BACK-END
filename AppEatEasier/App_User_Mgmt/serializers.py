@@ -1,6 +1,7 @@
 # Standard Libraries and Packages
 
 from django.db import models
+from django.db.models import fields
 from rest_framework import serializers
 from .models import User, UserProfile, UserFood, UserApp, UserRecipe, UserPlanner, UserMenu
 
@@ -36,3 +37,15 @@ class UserPlannerListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPlanner
         fields = ['user_profile','id','plan_title','period','start_date']
+
+
+class UserPlannerDetailSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose its to get User Planner Details
+    """
+
+    user_profile = UserListSerializer()
+
+    class Meta:
+        model = UserPlanner
+        fields = ['user_profile','id','plan_title','week_num','period','start_date','end_date','saved']

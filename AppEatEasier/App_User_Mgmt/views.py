@@ -7,11 +7,12 @@ from rest_framework.response import Response
 # Serializers:
 from .serializers import (
     UserDetailSerializer, UserListSerializer, UserMenuListSerializer, 
-    UserPlannerListSerializer, UserPlannerDetailSerializer, UserMenuDetailSerializer,
+    UserPlannerListSerializer, UserPlannerDetailSerializer, UserMenuDetailSerializer, 
+    UserProfileSerializer, UserProfileAppSerializer, UserProfileFoodSerializer, UserProfileRecipeSerializer
 )
 
 # Models:
-from .models import User, UserMenu, UserPlanner
+from .models import User, UserProfile, UserApp, UserFood, UserRecipe, UserMenu, UserPlanner
 
 # Create your views here.
 
@@ -41,6 +42,67 @@ class UserDetailsRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
 
+
+class UserProfileDetailAPIView(generics.ListAPIView):
+    """
+    This view its purpose its to retrieve full user profile including preferences
+    """
+    
+    def get_queryset(self):
+
+        user_id = self.kwargs['pk']
+        filter = {}
+
+        if user_id:
+            filter['user_profile_id'] = user_id
+
+        return UserProfile.objects.filter(**filter)
+
+    def get_queryset_apps(self):
+
+        user_id = self.kwargs['pk']
+        filter = {}
+
+        if user_id:
+            filter['user_profile_id'] = user_id
+
+        return UserApp.objects.filter(**filter)
+
+    def get_queryset_foods(self):
+
+        user_id = self.kwargs['pk']
+        filter = {}
+
+        if user_id:
+            filter['user_profile_id'] = user_id
+
+        return UserFood.objects.filter(**filter)
+
+    def get_queryset_recipes(self):
+
+        user_id = self.kwargs['pk']
+        filter = {}
+
+        if user_id:
+            filter['user_profile_id'] = user_id
+
+        return UserRecipe.objects.filter(**filter)
+
+    def list(self, request, *args, **kwargs):
+        user_profile = UserProfileSerializer(self.get_queryset(), many=True)
+        user_profile_apps = UserProfileAppSerializer(self.get_queryset_apps(), many=True)
+        user_profile_foods = UserProfileFoodSerializer(self.get_queryset_foods(), many=True)
+        user_profile_recipes = UserProfileRecipeSerializer(self.get_queryset_recipes(), many=True)
+
+        return Response(
+            {
+            "user_profile": user_profile.data,
+            "user_profile_apps":user_profile_apps.data,
+            "user_profile_foods":user_profile_foods.data,
+            "user_profile_recipes": user_profile_recipes.data
+            }
+        )
+    
 
 class UserPlannerListAPIView(generics.ListAPIView):
     """

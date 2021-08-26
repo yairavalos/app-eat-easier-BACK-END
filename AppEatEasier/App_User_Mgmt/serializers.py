@@ -1,13 +1,18 @@
 # Standard Libraries and Packages
 
 from rest_framework import serializers
+
+# Models
 from .models import User, UserProfile, UserFood, UserApp, UserRecipe, UserPlanner, UserMenu
+
+# External Models
+from App_Recipe_Mgmt.serializers import CatalogRecipeSerializer
 
 # Serializers definition
 
 class UserListSerializer(serializers.ModelSerializer):
     """
-    This serializer its purpose its to bring Users List from DB
+    This serializer its purpose is to bring Users List from DB
     """
 
     class Meta:
@@ -17,7 +22,7 @@ class UserListSerializer(serializers.ModelSerializer):
 
 class UserDetailSerializer(serializers.ModelSerializer):
     """
-    This serializer its purpose its to bring User Detail from DB
+    This serializer its purpose is to bring User Detail from DB
     """
 
     class Meta:
@@ -25,9 +30,55 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields = ['id','username','email','first_name','last_name','is_active','is_superuser']
 
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to give the full User Profile including Preferences (# of persons)
+    """
+    #user_profile = serializers.StringRelatedField(many=False) # Interesting function, avoids to declare an extra serializer
+    user_profile = UserListSerializer() 
+
+    class Meta:
+        model = UserProfile
+        fields = ['user_profile','adults_qty','child_qty']
+
+
+class UserProfileAppSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to give the full User Profile including Preferences (Appliances List)
+    """
+    user_profile = UserListSerializer() 
+
+    class Meta:
+        model = UserApp
+        fields = ['user_profile','app_name']
+
+
+class UserProfileFoodSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to give the full User Profile including Preferences (Food List)
+    """
+    user_profile = UserListSerializer() 
+
+    class Meta:
+        model = UserFood
+        fields = ['user_profile','food_type']
+
+
+class UserProfileRecipeSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to give the full User Profile including Preferences (Food List)
+    """
+    user_profile = UserListSerializer()
+    cat_recipe = CatalogRecipeSerializer()
+
+    class Meta:
+        model = UserRecipe
+        fields = ['user_profile','cat_recipe']
+        depth = 1
+
 class UserPlannerListSerializer(serializers.ModelSerializer):
     """
-    This serializer its purpose its to List Users Planners
+    This serializer its purpose is to List Users Planners
     """
     # OJO !!! hay usar los parentesis al final de la clase por favor !!!
     user_profile = UserListSerializer()

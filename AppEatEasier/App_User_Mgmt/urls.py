@@ -10,7 +10,7 @@ from App_SprMkt_Mgmt.views import SprMktListAPIView
 from .views import (
     UserAPIView, UserListAPIView, UserDetailsRetrieveUpdateAPIView, 
     UserPlannerListAPIView, UserPlannerIDListAPIView, UserPlannerIDDetailsAPIView,
-    UerMenuListAPIView,UserMenuIDDetailsAPIView, 
+    UerMenuListAPIView,UserMenuIDDetailsAPIView, UserProfileDetailAPIView,
     )
 
 app_name = "App_User_Mgmt"
@@ -19,6 +19,8 @@ urlpatterns = [
     path('', UserListAPIView.as_view()),
     path('planners/', UserPlannerListAPIView.as_view()),
     path('<int:pk>/', UserDetailsRetrieveUpdateAPIView.as_view()),
+    path('<int:pk>/profile/', UserProfileDetailAPIView.as_view()),
+    path('<int:pk>/favorites/'),
     path('<int:pk>/planners/', UserPlannerIDListAPIView.as_view()),
     path('<int:user_profile_id>/planners/<int:pk>/', UserPlannerIDDetailsAPIView.as_view()),
     path('<int:user_profile_id>/planners/<int:pk>/menu/', UerMenuListAPIView.as_view()),

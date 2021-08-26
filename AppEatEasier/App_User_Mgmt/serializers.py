@@ -76,6 +76,20 @@ class UserProfileRecipeSerializer(serializers.ModelSerializer):
         fields = ['user_profile','cat_recipe']
         depth = 1
 
+
+class UserFavoritesListSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to give the List of User´s Favorites Recipes
+    """
+
+    user_profile = UserListSerializer()
+    cat_recipe = CatalogRecipeSerializer()
+
+    class Meta:
+        model = UserRecipe
+        fields = ['user_profile','cat_recipe','checked','favorite']
+        depth = 1
+
 class UserPlannerListSerializer(serializers.ModelSerializer):
     """
     This serializer its purpose is to List Users Planners

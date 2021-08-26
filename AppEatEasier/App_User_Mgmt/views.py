@@ -8,7 +8,8 @@ from rest_framework.response import Response
 from .serializers import (
     UserDetailSerializer, UserListSerializer, UserMenuListSerializer, 
     UserPlannerListSerializer, UserPlannerDetailSerializer, UserMenuDetailSerializer, 
-    UserProfileSerializer, UserProfileAppSerializer, UserProfileFoodSerializer, UserProfileRecipeSerializer
+    UserProfileSerializer, UserProfileAppSerializer, UserProfileFoodSerializer, 
+    UserProfileRecipeSerializer, UserFavoritesListSerializer,
 )
 
 # Models:
@@ -103,6 +104,25 @@ class UserProfileDetailAPIView(generics.ListAPIView):
             }
         )
     
+
+class UserFavoriteListAPIView(generics.ListAPIView):
+    """
+    This view its purpose is to list total User´s Favorites from Recipe´s Catalog
+    """
+
+    serializer_class = UserFavoritesListSerializer
+
+    def get_queryset(self):
+
+        user_profile_id = self.kwargs['pk']
+        filter = {}
+
+        if user_profile_id:
+            filter['user_profile_id'] = user_profile_id
+            filter['favorite'] = True
+
+        return UserRecipe.objects.filter(**filter)
+
 
 class UserPlannerListAPIView(generics.ListAPIView):
     """

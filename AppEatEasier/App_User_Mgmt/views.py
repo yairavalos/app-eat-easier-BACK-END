@@ -5,10 +5,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 # Serializers:
-from .serializers import UserDetailSerializer, UserListSerializer, UserPlannerListSerializer, UserPlannerDetailSerializer
+from .serializers import (
+    UserDetailSerializer, UserListSerializer, UserMenuListSerializer, 
+    UserPlannerListSerializer, UserPlannerDetailSerializer,
+)
 
 # Models:
-from .models import User, UserPlanner
+from .models import User, UserMenu, UserPlanner
 
 # Create your views here.
 
@@ -67,7 +70,7 @@ class UserPlannerIDListAPIView(generics.ListAPIView):
         return self.queryset.filter(**filters)
 
 
-class UserPlannerIDDeatilsAPIView(generics.RetrieveUpdateDestroyAPIView):
+class UserPlannerIDDetailsAPIView(generics.RetrieveUpdateDestroyAPIView):
     """
     This view its purpose its to get a User Planner Detail by User ID
     """
@@ -84,6 +87,31 @@ class UserPlannerIDDeatilsAPIView(generics.RetrieveUpdateDestroyAPIView):
         if user_profile_id:
             filters_dict['user_profile_id'] = user_profile_id
             filters_dict['id'] = plan_id
+
+        return self.queryset.filter(**filters_dict)
+
+
+class UerMenuListAPIView(generics.ListAPIView):
+    """
+    This views its purpose is to bring
+    """
+    #user_menu = UserMenu.objects.all().prefetch_related()
+
+    queryset = UserMenu.objects.all()    
+    serializer_class = UserMenuListSerializer
+    # useful tool for debug -> print(str(queryset.query))
+    
+    def get_queryset(self):
+
+        user_profile_id = self.kwargs['user_profile_id']
+        plan_id = self.kwargs['pk']
+        filters_dict = {}
+
+        if plan_id:   
+            filters_dict['user_planner_id'] = plan_id
+
+        if user_profile_id:
+            filters_dict['user_planner__user_profile_id'] = user_profile_id #the key its here !!!!
 
         return self.queryset.filter(**filters_dict)
 

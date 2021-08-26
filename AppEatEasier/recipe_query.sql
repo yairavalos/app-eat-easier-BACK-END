@@ -25,3 +25,17 @@ ON App_SprMkt_Mgmt_unitsconvertion.id = App_Recipe_Mgmt_recipeingredient.unit_ty
 INNER JOIN App_SprMkt_Mgmt_sprmktpackaging
 ON App_SprMkt_Mgmt_sprmktpackaging.ingredient_id = App_Recipe_Mgmt_recipeingredient.cat_ingredient_id
 ;
+
+SELECT "App_User_Mgmt_usermenu"."id", "App_User_Mgmt_usermenu"."user_planner_id", "App_User_Mgmt_usermenu"."meal_date", 
+"App_User_Mgmt_usermenu"."meal_type", "App_User_Mgmt_usermenu"."user_recipe_id", "App_User_Mgmt_usermenu"."done", 
+"App_User_Mgmt_userplanner"."id", "App_User_Mgmt_userplanner"."user_profile_id", "App_User_Mgmt_userplanner"."plan_title", 
+"App_User_Mgmt_userplanner"."week_num", "App_User_Mgmt_userplanner"."period", "App_User_Mgmt_userplanner"."start_date", 
+"App_User_Mgmt_userplanner"."end_date", "App_User_Mgmt_userplanner"."saved", "auth_user"."id", "auth_user"."password", 
+"auth_user"."last_login", "auth_user"."is_superuser", "auth_user"."username", "auth_user"."first_name", "auth_user"."last_name", 
+"auth_user"."email", "auth_user"."is_staff", "auth_user"."is_active", "auth_user"."date_joined" 
+FROM "App_User_Mgmt_usermenu" 
+INNER JOIN "App_User_Mgmt_userplanner" 
+ON ("App_User_Mgmt_usermenu"."user_planner_id" = "App_User_Mgmt_userplanner"."id") 
+INNER JOIN "auth_user" 
+ON ("App_User_Mgmt_userplanner"."user_profile_id" = "auth_user"."id")
+;

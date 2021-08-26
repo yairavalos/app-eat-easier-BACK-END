@@ -7,7 +7,7 @@ from rest_framework.response import Response
 # Serializers:
 from .serializers import (
     UserDetailSerializer, UserListSerializer, UserMenuListSerializer, 
-    UserPlannerListSerializer, UserPlannerDetailSerializer,
+    UserPlannerListSerializer, UserPlannerDetailSerializer, UserMenuDetailSerializer,
 )
 
 # Models:
@@ -93,7 +93,7 @@ class UserPlannerIDDetailsAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 class UerMenuListAPIView(generics.ListAPIView):
     """
-    This views its purpose is to bring
+    This views its purpose is to get a User Menu List by User Planner ID and User Profile ID 
     """
     #user_menu = UserMenu.objects.all().prefetch_related()
 
@@ -115,3 +115,29 @@ class UerMenuListAPIView(generics.ListAPIView):
 
         return self.queryset.filter(**filters_dict)
 
+
+class UserMenuIDDetailsAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    This view its purpose is to get a User Menu Item Detail by User Menu ID, User Planner ID and User Profile ID
+    """
+
+    queryset = UserMenu.objects.all()
+    serializer_class = UserMenuDetailSerializer
+
+    def get_queryset(self):
+
+        user_profile_id = self.kwargs['user_profile_id']
+        plan_id = self.kwargs['user_planner_id']
+        menu_item = self.kwargs['pk']
+        filters_dict = {}
+
+        if plan_id:   
+           filters_dict['user_planner_id'] = plan_id
+
+        if user_profile_id:
+           filters_dict['user_planner__user_profile_id'] = user_profile_id #the key its here !!!!
+
+        if menu_item:
+            filters_dict['pk'] = menu_item
+
+        return self.queryset.filter(**filters_dict)

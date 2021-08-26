@@ -53,7 +53,7 @@ class UserPlannerDetailSerializer(serializers.ModelSerializer):
 
 class UserMenuListSerializer(serializers.ModelSerializer):
     """
-    This serializer its purpose its to get User Menu according to a given User Planner ID
+    This serializer its purpose is to get User Menu according to a given User Planner ID
     """
 
     user_planner = UserPlannerListSerializer()
@@ -61,3 +61,27 @@ class UserMenuListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMenu
         fields = ['id','user_planner','meal_date','meal_type','user_recipe']
+
+
+class UserRecipeListSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to get a Menu Item Detail by ID
+    """
+
+    class Meta:
+        model = UserRecipe
+        fields = ['id','cat_recipe']
+        depth = 1
+
+
+class UserMenuDetailSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to get User Menu according to a given User Planner ID
+    """
+
+    user_planner = UserPlannerListSerializer()
+    user_recipe = UserRecipeListSerializer()
+
+    class Meta:
+        model = UserMenu
+        fields = ['id','user_planner','meal_date','meal_type','user_recipe','done']

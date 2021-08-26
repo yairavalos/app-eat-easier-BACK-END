@@ -3,7 +3,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import UnitsConvertion, CatalogIngredient, CatalogPackage, SprmktDept, SprmktPackaging,SprmktList
+from .models import UnitsConvertion, CatalogIngredient, CatalogPackage, SprmktDept, SprmktPackaging, SprmktList
 
 admin.site.register(UnitsConvertion)
 admin.site.register(CatalogIngredient)

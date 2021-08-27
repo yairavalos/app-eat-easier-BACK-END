@@ -53,6 +53,7 @@ class CatalogRecipeIngredientsSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeIngredient
         fields = ['id','cat_recipe','cat_ingredient','ingredient_qty','unit_type']
+        depth = 1
 
 
 class CatalogRecipeProcedureSerializer(serializers.ModelSerializer):

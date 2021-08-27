@@ -2,7 +2,7 @@
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import generics, filters
+from rest_framework import generics, filters, serializers
 from django_filters.rest_framework import DjangoFilterBackend
 
 # Serializers:
@@ -20,6 +20,17 @@ class RecipeAPIView(APIView):
 
     def get(self, request):
         return Response("This is Recipe Main View")
+
+
+class RecipeIngredientListAPIView(generics.ListAPIView):
+    """
+    This View bring a list of available Ingredient´s Catalog
+    """
+
+    queryset = RecipeIngredient.objects.all()
+    serializer_class = CatalogRecipeIngredientsSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['cat_ingredient__ingredient_name','cat_ingredient__ingredient_cat']
 
 
 class RecipeListAPIView(generics.ListCreateAPIView):
@@ -57,9 +68,6 @@ class RecipeDetailedViewerAPIView(generics.ListAPIView):
     """
     This views brings 4 different models in just one view to create The Recipe Viewer
     """
-
-    #queryset = CatalogRecipe.objects.all()
-    #serializer_class = CatalogRecipeDetailsSerializer
 
     def get_queryset(self):
         recipe_id = self.kwargs['pk']

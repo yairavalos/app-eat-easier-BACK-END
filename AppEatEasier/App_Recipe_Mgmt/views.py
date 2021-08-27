@@ -1,10 +1,9 @@
 # Standard Libraries and Packages:
 
-from django.http import response
-from django.shortcuts import render
-from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Serializers:
 from .serializers import CatalogRecipeSerializer
@@ -23,5 +22,6 @@ class RecipeListAPIView(generics.ListCreateAPIView):
 
     queryset = CatalogRecipe.objects.all()
     serializer_class = CatalogRecipeSerializer
-
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title','meal_type']
 

@@ -7,8 +7,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 # Serializers:
+from .serializers import CatalogRecipeSerializer
 
 # Models:
+from .models import CatalogRecipe
 
 # Create your views here.
 class RecipeAPIView(APIView):
@@ -18,6 +20,8 @@ class RecipeAPIView(APIView):
 
 
 class RecipeListAPIView(generics.ListCreateAPIView):
-    pass
+
+    queryset = CatalogRecipe.objects.all()
+    serializer_class = CatalogRecipeSerializer
 
 

@@ -9,7 +9,7 @@ from .models import CatalogRecipe
 
 class CatalogRecipeSerializer(serializers.ModelSerializer):
     """
-    This serializers is going to help to bring specific recipe data from Recipe´s Catalog 
+    This serializers is going to help to bring the full List of recipes from Recipe´s Catalog 
     """
 
     class Meta:

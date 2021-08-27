@@ -9,5 +9,5 @@ from .views import RecipeAPIView, RecipeListAPIView
 app_name = "App_Recipe_Mgmt"
 
 urlpatterns = [
-    path('', RecipeAPIView.as_view()),
+    path('', RecipeListAPIView.as_view()),
 ]

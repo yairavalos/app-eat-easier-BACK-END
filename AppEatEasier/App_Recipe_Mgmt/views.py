@@ -22,6 +22,7 @@ class RecipeListAPIView(generics.ListCreateAPIView):
 
     queryset = CatalogRecipe.objects.all()
     serializer_class = CatalogRecipeSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['title','meal_type']
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title','meal_type','recipe_category__category'] #this kind of chaining its awesome !!!!
+    ordering_fields = ['recipe_category']
 

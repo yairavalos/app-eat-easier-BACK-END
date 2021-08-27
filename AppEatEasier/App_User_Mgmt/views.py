@@ -98,8 +98,8 @@ class UserProfileDetailAPIView(generics.ListAPIView):
         return Response(
             {
             "user_profile": user_profile.data,
-            "user_profile_apps":user_profile_apps.data,
-            "user_profile_foods":user_profile_foods.data,
+            "user_profile_apps": user_profile_apps.data,
+            "user_profile_foods": user_profile_foods.data,
             "user_profile_recipes": user_profile_recipes.data
             }
         )

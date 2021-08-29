@@ -18,7 +18,7 @@ class CatalogRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CatalogRecipe
-        fields = ['id','recipe_category','title','meal_type']
+        fields = ['id','recipe_category','title','meal_type','level','pic_url']
         depth = 1
 
 

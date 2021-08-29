@@ -39,7 +39,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ['user_profile','adults_qty','child_qty']
+        fields = ['id','user_profile','adults_qty','child_qty']
 
 
 class UserProfileAppSerializer(serializers.ModelSerializer):
@@ -50,7 +50,7 @@ class UserProfileAppSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserApp
-        fields = ['user_profile','app_name']
+        fields = ['id','user_profile','app_name']
 
 
 class UserProfileFoodSerializer(serializers.ModelSerializer):
@@ -61,7 +61,7 @@ class UserProfileFoodSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserFood
-        fields = ['user_profile','food_type']
+        fields = ['id','user_profile','food_type']
 
 
 class UserProfileRecipeSerializer(serializers.ModelSerializer):
@@ -73,7 +73,7 @@ class UserProfileRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserRecipe
-        fields = ['user_profile','cat_recipe']
+        fields = ['id','user_profile','cat_recipe']
         depth = 1
 
 
@@ -87,8 +87,9 @@ class UserFavoritesListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserRecipe
-        fields = ['user_profile','cat_recipe','checked','favorite']
+        fields = ['id','user_profile','cat_recipe','checked','favorite']
         depth = 1
+
 
 class UserPlannerListSerializer(serializers.ModelSerializer):
     """

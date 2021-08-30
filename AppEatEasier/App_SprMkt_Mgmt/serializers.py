@@ -65,4 +65,4 @@ class SprMktListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SprmktList
-        fields = ['id','user_planner','qty','stock_package']
+        fields = ['id','user_planner','qty','stock_package','purchase']

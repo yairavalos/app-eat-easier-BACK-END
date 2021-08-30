@@ -29,7 +29,7 @@ class CatalogRecipeDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CatalogRecipe
-        fields = ['id','recipe_category','title','meal_type','description','persons','level','pic_url']
+        fields = ['id','recipe_category','title','meal_type','description','persons','time_prep','level','pic_url']
         depth = 1
 
 
@@ -47,12 +47,10 @@ class CatalogRecipeIngredientsSerializer(serializers.ModelSerializer):
     """
     This serializer is going to help us bringing the regarding Ingredients for a given Recipe
     """
-
-    #unit_type = SprMktUnitConvertion()
-
+    # Awesome if you just send the field name + _id you can just have that !! -> cat_recipe_id and you only get id !!
     class Meta:
         model = RecipeIngredient
-        fields = ['id','cat_recipe','cat_ingredient','ingredient_qty','unit_type']
+        fields = ['id','cat_recipe_id','cat_ingredient','ingredient_qty','unit_type']
         depth = 1
 
 

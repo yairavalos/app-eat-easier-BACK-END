@@ -115,27 +115,38 @@ class UserPlannerDetailSerializer(serializers.ModelSerializer):
         fields = ['id','user_profile','plan_title','week_num','period','start_date','end_date','saved']
 
 
-class UserMenuListSerializer(serializers.ModelSerializer):
+class UserRecipeListSerializer(serializers.ModelSerializer):
     """
-    This serializer its purpose is to get User Menu according to a given User Planner ID
+    This serializer its purpose is to get a Menu Item Lists by ID
     """
-
-    user_planner = UserPlannerListSerializer()
 
     class Meta:
-        model = UserMenu
-        fields = ['id','user_planner','meal_date','meal_type','user_recipe']
+        model = UserRecipe
+        fields = ['id','cat_recipe_id']
 
 
-class UserRecipeListSerializer(serializers.ModelSerializer):
+class UserRecipeDetailSerializer(serializers.ModelSerializer):
     """
     This serializer its purpose is to get a Menu Item Detail by ID
     """
 
     class Meta:
         model = UserRecipe
-        fields = ['id','cat_recipe']
+        fields = ['id','cat_recipe','favorite']
         depth = 1
+
+
+class UserMenuListSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to get User Menu according to a given User Planner ID
+    """
+
+    user_planner = UserPlannerListSerializer()
+    user_recipe = UserRecipeDetailSerializer()
+
+    class Meta:
+        model = UserMenu
+        fields = ['id','user_planner','meal_date','meal_type','user_recipe']
 
 
 class UserMenuDetailSerializer(serializers.ModelSerializer):
@@ -144,7 +155,7 @@ class UserMenuDetailSerializer(serializers.ModelSerializer):
     """
 
     user_planner = UserPlannerListSerializer()
-    user_recipe = UserRecipeListSerializer()
+    user_recipe = UserRecipeDetailSerializer()
 
     class Meta:
         model = UserMenu

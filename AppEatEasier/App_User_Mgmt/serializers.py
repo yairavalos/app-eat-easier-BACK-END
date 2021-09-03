@@ -1,6 +1,7 @@
 # Standard Libraries and Packages
 
 from rest_framework import serializers
+from django.contrib.auth.hashers import make_password
 
 # Models
 from .models import User, UserProfile, UserFood, UserApp, UserRecipe, UserPlanner, UserMenu
@@ -9,6 +10,22 @@ from .models import User, UserProfile, UserFood, UserApp, UserRecipe, UserPlanne
 from App_Recipe_Mgmt.serializers import CatalogRecipeSerializer
 
 # Serializers definition
+class UserSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose its to generate new user through sign-up view
+    """
+
+    class Meta:
+        model = User
+        fields = ['username','first_name','last_name','email','password']
+        extra_kwargs = {'password': {'write_only':True}}
+
+    def create(self, validated_data):
+        
+        validated_data['password'] = make_password(validated_data['password'])
+        user = User.objects.create(**validated_data)
+        return user
+
 
 class UserListSerializer(serializers.ModelSerializer):
     """

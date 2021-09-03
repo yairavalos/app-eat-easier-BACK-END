@@ -3,10 +3,12 @@
 from rest_framework import generics, serializers, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 
 # Serializers:
 from .serializers import (
-    UserDetailSerializer, UserListSerializer, UserMenuListSerializer, 
+    UserSerializer, UserDetailSerializer, UserListSerializer, UserMenuListSerializer, 
     UserPlannerListSerializer, UserPlannerDetailSerializer, UserMenuDetailSerializer, 
     UserProfileSerializer, UserProfileAppSerializer, UserProfileFoodSerializer, 
     UserProfileRecipeSerializer, UserFavoritesListSerializer,
@@ -23,6 +25,36 @@ class UserAPIView(APIView):
     """
     def get(self, request):
         return Response("This User Main Page View")
+
+
+class UserCreateAPIView(generics.CreateAPIView):
+    """
+    This view its intended for User  Generation
+    """
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        token, created = Token.objects.get_or_create(user=serializer.instance)
+        user = User.objects.get(id=token.user_id)
+        return Response({'id':token.user_id, 'username':user.username, 'token': token.key })
+
+
+class UserIDAuthTokenView(ObtainAuthToken):
+    """
+    This view its intended to give a little more detail in order to 
+    address users correctly into end-points filters
+    """
+
+    def post(self, request, *args, **kwargs):
+        response =  super(UserIDAuthTokenView, self).post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+        user = User.objects.get(id=token.user_id)
+        return Response({'id':token.user_id, 'user':user.username, 'token': token.key })
 
 
 class UserListAPIView(generics.ListAPIView):

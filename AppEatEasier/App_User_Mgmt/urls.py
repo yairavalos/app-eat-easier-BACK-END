@@ -2,21 +2,24 @@
 
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.authtoken import views as authtoken_views
 
 # External Views
 from App_SprMkt_Mgmt.views import SprMktListAPIView
 
 # Views:
 from .views import (
-    UserAPIView, UserListAPIView, UserDetailsRetrieveUpdateAPIView, 
+    UserAPIView, UserIDAuthTokenView, UserListAPIView, UserDetailsRetrieveUpdateAPIView, 
     UserPlannerListAPIView, UserPlannerIDListAPIView, UserPlannerIDDetailsAPIView,
-    UerMenuListAPIView,UserMenuIDDetailsAPIView, UserProfileDetailAPIView, UserFavoriteListAPIView,
+    UerMenuListAPIView,UserMenuIDDetailsAPIView, UserProfileDetailAPIView, UserFavoriteListAPIView, UserCreateAPIView
     )
 
 app_name = "App_User_Mgmt"
 
 urlpatterns = [
     path('', UserListAPIView.as_view()),
+    path('signup/', UserCreateAPIView.as_view(), name="sign-up"),
+    path('login/', UserIDAuthTokenView.as_view(), name='token_login'),
     path('planners/', UserPlannerListAPIView.as_view()),
     path('<int:pk>/', UserDetailsRetrieveUpdateAPIView.as_view()),
     path('<int:pk>/profile/', UserProfileDetailAPIView.as_view()),

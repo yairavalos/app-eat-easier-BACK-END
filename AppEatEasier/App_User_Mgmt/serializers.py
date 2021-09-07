@@ -34,7 +34,7 @@ class UserListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','username','email']
+        fields = ['id','username'] # ,'email' has been removed in order to be more dynamic on data exchange
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -51,12 +51,28 @@ class UserProfileSerializer(serializers.ModelSerializer):
     """
     This serializer its purpose is to give the full User Profile including Preferences (# of persons)
     """
-    #user_profile = serializers.StringRelatedField(many=False) # Interesting function, avoids to declare an extra serializer
+    
     user_profile = UserListSerializer() 
 
     class Meta:
         model = UserProfile
         fields = ['id','user_profile','adults_qty','child_qty']
+
+
+class UserProfilePeopleQtySerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to give the full User Profile including Preferences (# of persons)
+    """
+
+    class Meta:
+        model = UserProfile
+        fields = ['user_profile','adults_qty','child_qty'] # 'id',
+
+    def create(self, request): # request => json -> print()
+        print(request['user_profile'])
+        user_people = UserProfile.objects.create(user_profile=request['user_profile'], adults_qty=request['adults_qty'], child_qty=request['child_qty'])
+        return user_people
+        
 
 
 class UserProfileAppSerializer(serializers.ModelSerializer):

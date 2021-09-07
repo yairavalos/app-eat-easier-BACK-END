@@ -11,7 +11,7 @@ from .serializers import (
     UserSerializer, UserDetailSerializer, UserListSerializer, UserMenuListSerializer, 
     UserPlannerListSerializer, UserPlannerDetailSerializer, UserMenuDetailSerializer, 
     UserProfileSerializer, UserProfileAppSerializer, UserProfileFoodSerializer, 
-    UserProfileRecipeSerializer, UserFavoritesListSerializer,
+    UserProfileRecipeSerializer, UserFavoritesListSerializer, UserProfilePeopleQtySerializer
 )
 
 # Models:
@@ -76,6 +76,36 @@ class UserDetailsRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = UserDetailSerializer
 
 
+class UserProfileQtyView(generics.ListCreateAPIView): # To POST just change to ListCreateAPIView
+    """
+    This view its purpose its to handle Qty Preferences from User Profile
+    """
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfilePeopleQtySerializer
+    
+    
+class UserProfileQtyEditView(generics.RetrieveUpdateDestroyAPIView): 
+    """
+    This view its purpose its to handle Qty Preferences from User Profile
+    """
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfilePeopleQtySerializer
+
+    def get_queryset(self):
+
+        user_id = self.kwargs['pk']
+        filter = {}
+
+        if user_id:
+            filter['user_profile_id'] = user_id
+
+        return UserProfile.objects.filter(**filter)
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+
+
 class UserProfileDetailAPIView(generics.ListAPIView):
     """
     This view its purpose its to retrieve full user profile including preferences
@@ -137,7 +167,7 @@ class UserProfileDetailAPIView(generics.ListAPIView):
         )
     
 
-class UserFavoriteListAPIView(generics.ListAPIView):
+class UserFavoriteListAPIView(generics.ListAPIView): # To POST just change to ListCreateAPIView
     """
     This view its purpose is to list total User´s Favorites from Recipe´s Catalog
     """
@@ -156,7 +186,7 @@ class UserFavoriteListAPIView(generics.ListAPIView):
         return UserRecipe.objects.filter(**filter)
 
 
-class UserPlannerListAPIView(generics.ListAPIView):
+class UserPlannerListAPIView(generics.ListAPIView): # To POST just change to ListCreateAPIView
     """
     This view its purpose its to list total User´s Planner
     """
@@ -165,7 +195,7 @@ class UserPlannerListAPIView(generics.ListAPIView):
     serializer_class = UserPlannerListSerializer
 
 
-class UserPlannerIDListAPIView(generics.ListAPIView):
+class UserPlannerIDListAPIView(generics.ListAPIView): 
     """
     This view its purpose its to list specific User Planner by User ID 
     """
@@ -205,7 +235,7 @@ class UserPlannerIDDetailsAPIView(generics.RetrieveUpdateDestroyAPIView):
         return self.queryset.filter(**filters_dict)
 
 
-class UerMenuListAPIView(generics.ListAPIView):
+class UerMenuListAPIView(generics.ListAPIView): # To POST just change to ListCreateAPIView
     """
     This views its purpose is to get a User Menu List by User Planner ID and User Profile ID 
     """

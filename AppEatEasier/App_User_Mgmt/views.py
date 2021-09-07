@@ -10,7 +10,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from .serializers import (
     UserSerializer, UserDetailSerializer, UserListSerializer, UserMenuListSerializer, 
     UserPlannerListSerializer, UserPlannerDetailSerializer, UserMenuDetailSerializer, 
-    UserProfileSerializer, UserProfileAppSerializer, UserProfileFoodSerializer, 
+    UserProfileSerializer, UserProfileAppSerializer, UserProfileEditAppsSerializer, UserProfileFoodSerializer, 
     UserProfileRecipeSerializer, UserFavoritesListSerializer, UserProfilePeopleQtySerializer,
     UserProfileEditFoodSerializer,
 )
@@ -91,6 +91,15 @@ class UserProfileQtyEditView(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = UserProfile.objects.all()
     serializer_class = UserProfilePeopleQtySerializer
+
+
+class UserProfileAppsView(generics.ListCreateAPIView): # To POST Kitchen Appliances
+    """
+    This view its purpose its to handle User´s Food Preferences
+    """
+
+    queryset = UserApp.objects.all()
+    serializer_class = UserProfileEditAppsSerializer
 
 
 class UserProfileFoodView(generics.ListCreateAPIView): # To POST Food Preferences

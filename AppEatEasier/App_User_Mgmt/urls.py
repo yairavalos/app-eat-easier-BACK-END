@@ -10,7 +10,7 @@ from App_SprMkt_Mgmt.views import SprMktListAPIView
 # Views:
 from .views import (
     UserAPIView, UserIDAuthTokenView, UserListAPIView, UserDetailsRetrieveUpdateAPIView, 
-    UserProfileQtyView, UserProfileQtyEditView, UserProfileFoodView,
+    UserProfileQtyView, UserProfileQtyEditView, UserProfileAppsView, UserProfileFoodView,
     UserPlannerListAPIView, UserPlannerIDListAPIView, UserPlannerIDDetailsAPIView,
     UerMenuListAPIView,UserMenuIDDetailsAPIView, UserProfileDetailAPIView, UserFavoriteListAPIView, UserCreateAPIView
     )
@@ -23,6 +23,7 @@ urlpatterns = [
     path('login/', UserIDAuthTokenView.as_view(), name='token_login'),
     path('planners/', UserPlannerListAPIView.as_view()),
     path('profiles/qty/', UserProfileQtyView.as_view()), # POST -> User Profile People Amount
+    path('profiles/apps/', UserProfileAppsView.as_view()), # POST -> User Profile Food Preferences
     path('profiles/food/', UserProfileFoodView.as_view()), # POST -> User Profile Food Preferences
     path('<int:pk>/', UserDetailsRetrieveUpdateAPIView.as_view()),
     path('<int:pk>/favorites/', UserFavoriteListAPIView.as_view()),

@@ -88,6 +88,21 @@ class UserProfileAppSerializer(serializers.ModelSerializer):
         fields = ['id','user_profile','app_name']
 
 
+class UserProfileEditAppsSerializer(serializers.ModelSerializer): # Designed for POST
+    """
+    This serializer its purpose is to POST User´s Kitchen Appliances
+    """
+
+    class Meta:
+        model = UserApp
+        fields = ['user_profile', 'app_name']
+
+    def create(self, validated_data):
+        print(validated_data)
+        user_apps = UserApp.objects.create(**validated_data)
+        return user_apps
+
+
 class UserProfileFoodSerializer(serializers.ModelSerializer):
     """
     This serializer its purpose is to give the full User Profile including Preferences (Food List)
@@ -101,7 +116,7 @@ class UserProfileFoodSerializer(serializers.ModelSerializer):
 
 class UserProfileEditFoodSerializer(serializers.ModelSerializer): # Designed for POST
     """
-    This serializer its purpose is to give 
+    This serializer its purpose is to POST User´s Food Preferences 
     """
 
     class Meta:

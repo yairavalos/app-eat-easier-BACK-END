@@ -11,7 +11,8 @@ from .serializers import (
     UserSerializer, UserDetailSerializer, UserListSerializer, UserMenuListSerializer, 
     UserPlannerListSerializer, UserPlannerDetailSerializer, UserMenuDetailSerializer, 
     UserProfileSerializer, UserProfileAppSerializer, UserProfileFoodSerializer, 
-    UserProfileRecipeSerializer, UserFavoritesListSerializer, UserProfilePeopleQtySerializer
+    UserProfileRecipeSerializer, UserFavoritesListSerializer, UserProfilePeopleQtySerializer,
+    UserProfileEditFoodSerializer,
 )
 
 # Models:
@@ -91,19 +92,14 @@ class UserProfileQtyEditView(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfilePeopleQtySerializer
 
-    def get_queryset(self):
 
-        user_id = self.kwargs['pk']
-        filter = {}
+class UserProfileFoodView(generics.ListCreateAPIView): # To POST Food Preferences
+    """
+    This view its purpose its to handle User´s Food Preferences
+    """
 
-        if user_id:
-            filter['user_profile_id'] = user_id
-
-        return UserProfile.objects.filter(**filter)
-
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
+    queryset = UserFood.objects.all()
+    serializer_class = UserProfileEditFoodSerializer
 
 
 class UserProfileDetailAPIView(generics.ListAPIView):

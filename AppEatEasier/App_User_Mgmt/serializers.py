@@ -1,5 +1,7 @@
 # Standard Libraries and Packages
 
+from django.db import models
+from django.db.models import fields
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 
@@ -59,7 +61,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['id','user_profile','adults_qty','child_qty']
 
 
-class UserProfilePeopleQtySerializer(serializers.ModelSerializer):
+class UserProfilePeopleQtySerializer(serializers.ModelSerializer): # Designed for POST
     """
     This serializer its purpose is to give the full User Profile including Preferences (# of persons)
     """
@@ -96,6 +98,20 @@ class UserProfileFoodSerializer(serializers.ModelSerializer):
         model = UserFood
         fields = ['id','user_profile','food_type']
 
+
+class UserProfileEditFoodSerializer(serializers.ModelSerializer): # Designed for POST
+    """
+    This serializer its purpose is to give 
+    """
+
+    class Meta:
+        model = UserFood
+        fields = ['user_profile', 'food_type']
+
+    def create(self, validated_data):
+        print(validated_data)
+        user_food = UserFood.objects.create(**validated_data)
+        return user_food
 
 class UserProfileRecipeSerializer(serializers.ModelSerializer):
     """

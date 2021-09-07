@@ -102,7 +102,7 @@ class UserProfileAppsView(generics.ListCreateAPIView): # To POST Kitchen Applian
     queryset = UserApp.objects.all()
     serializer_class = UserProfileEditAppsSerializer
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         data = request.data
         
         if isinstance(data, list):
@@ -124,6 +124,20 @@ class UserProfileFoodView(generics.ListCreateAPIView): # To POST Food Preference
 
     queryset = UserFood.objects.all()
     serializer_class = UserProfileEditFoodSerializer
+
+    def post(self, request):
+        data = request.data
+        
+        if isinstance(data, list):
+            serializer = self.get_serializer(data=data, many=True)
+        else:
+            serializer = self.get_serializer(data=data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserProfileDetailAPIView(generics.ListAPIView):

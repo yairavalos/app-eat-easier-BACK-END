@@ -1,5 +1,6 @@
 # Standard Libraries and Packages:
 
+from rest_framework import status
 from rest_framework import generics, serializers, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -100,6 +101,20 @@ class UserProfileAppsView(generics.ListCreateAPIView): # To POST Kitchen Applian
 
     queryset = UserApp.objects.all()
     serializer_class = UserProfileEditAppsSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        
+        if isinstance(data, list):
+            serializer = self.get_serializer(data=data, many=True)
+        else:
+            serializer = self.get_serializer(data=data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserProfileFoodView(generics.ListCreateAPIView): # To POST Food Preferences

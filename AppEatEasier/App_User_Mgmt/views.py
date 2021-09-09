@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Serializers:
 from .serializers import (
@@ -84,6 +85,9 @@ class UserProfileQtyView(generics.ListCreateAPIView): # To POST just change to L
     """
     queryset = UserProfile.objects.all()
     serializer_class = UserProfilePeopleQtySerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['=user_profile__id']
+    ordering_fields = ['user_profile']
     
     
 class UserProfileQtyEditView(generics.RetrieveUpdateDestroyAPIView): 
@@ -101,6 +105,9 @@ class UserProfileAppsView(generics.ListCreateAPIView): # To POST Kitchen Applian
 
     queryset = UserApp.objects.all()
     serializer_class = UserProfileEditAppsSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['=user_profile__id']
+    ordering_fields = ['user_profile']
 
     def post(self, request):
         data = request.data
@@ -124,6 +131,10 @@ class UserProfileFoodView(generics.ListCreateAPIView): # To POST Food Preference
 
     queryset = UserFood.objects.all()
     serializer_class = UserProfileEditFoodSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['=user_profile__id']
+    ordering_fields = ['user_profile']
+    
 
     def post(self, request):
         data = request.data

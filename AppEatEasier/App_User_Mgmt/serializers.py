@@ -128,6 +128,7 @@ class UserProfileEditFoodSerializer(serializers.ModelSerializer): # Designed for
         user_food = UserFood.objects.create(**validated_data)
         return user_food
 
+
 class UserProfileRecipeSerializer(serializers.ModelSerializer):
     """
     This serializer its purpose is to give the full User Profile including Preferences (Food List)

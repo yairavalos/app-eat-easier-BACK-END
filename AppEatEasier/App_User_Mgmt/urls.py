@@ -10,7 +10,8 @@ from App_SprMkt_Mgmt.views import SprMktListAPIView
 # Views:
 from .views import (
     UserAPIView, UserIDAuthTokenView, UserListAPIView, UserDetailsRetrieveUpdateAPIView, 
-    UserProfileQtyView, UserProfileQtyEditView, UserProfileAppsView, UserProfileFoodView,
+    UserProfileQtyView, UserProfileAppsView, UserProfileFoodView,
+    UserPlannerListCreateView,
     UserPlannerListAPIView, UserPlannerIDListAPIView, UserPlannerIDDetailsAPIView,
     UerMenuListAPIView,UserMenuIDDetailsAPIView, UserProfileDetailAPIView, UserFavoriteListAPIView, UserCreateAPIView
     )
@@ -18,18 +19,22 @@ from .views import (
 app_name = "App_User_Mgmt"
 
 urlpatterns = [
+    # Initial Template
     path('', UserListAPIView.as_view()),
+    # User Registration
     path('signup/', UserCreateAPIView.as_view(), name="sign-up"),
     path('login/', UserIDAuthTokenView.as_view(), name='token_login'),
+    # Listing, searching and Posting
     path('planners/', UserPlannerListAPIView.as_view()),
     path('profiles/qty/', UserProfileQtyView.as_view()), # POST -> User Profile People Amount
     path('profiles/apps/', UserProfileAppsView.as_view()), # POST -> User Profile Food Preferences
     path('profiles/food/', UserProfileFoodView.as_view()), # POST -> User Profile Food Preferences
+    path('profiles/planner/', UserPlannerListCreateView.as_view()), # POST -> User New Menu Creation
+    # Just for validate specific user views data
     path('<int:pk>/', UserDetailsRetrieveUpdateAPIView.as_view()),
     path('<int:pk>/favorites/', UserFavoriteListAPIView.as_view()),
-    path('<int:pk>/planners/', UserPlannerIDListAPIView.as_view()),
-    path('<int:pk>/profile/', UserProfileDetailAPIView.as_view()),
-    path('<int:pk>/profile/qty/edit/', UserProfileQtyEditView.as_view()),
+    path('<int:pk>/planners/', UserPlannerIDListAPIView.as_view()), 
+    path('<int:pk>/profile/', UserProfileDetailAPIView.as_view()), 
     path('<int:user_profile_id>/planners/<int:pk>/', UserPlannerIDDetailsAPIView.as_view()),
     path('<int:user_profile_id>/planners/<int:pk>/menu/', UerMenuListAPIView.as_view()),
     path('<int:user_profile_id>/planners/<int:user_planner_id>/menu/<int:pk>/', UserMenuIDDetailsAPIView.as_view()),

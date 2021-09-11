@@ -90,14 +90,6 @@ class UserProfileQtyView(generics.ListCreateAPIView): # To POST just change to L
     ordering_fields = ['user_profile']
     
     
-class UserProfileQtyEditView(generics.RetrieveUpdateDestroyAPIView): 
-    """
-    This view its purpose its to handle Qty Preferences from User Profile
-    """
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfilePeopleQtySerializer
-
-
 class UserProfileAppsView(generics.ListCreateAPIView): # To POST Kitchen Appliances
     """
     This view its purpose its to handle User´s Food Preferences
@@ -131,6 +123,33 @@ class UserProfileFoodView(generics.ListCreateAPIView): # To POST Food Preference
 
     queryset = UserFood.objects.all()
     serializer_class = UserProfileEditFoodSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['=user_profile__id']
+    ordering_fields = ['user_profile']
+    
+
+    def post(self, request):
+        data = request.data
+        
+        if isinstance(data, list):
+            serializer = self.get_serializer(data=data, many=True)
+        else:
+            serializer = self.get_serializer(data=data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserPlannerListCreateView(generics.ListCreateAPIView): # To POST New Menu´s Planners
+    """
+    This view its purpose its to handle User´s New Menu Planner Generation
+    """
+
+    queryset = UserPlanner.objects.all()
+    serializer_class = UserPlannerCreateDetailSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['=user_profile__id']
     ordering_fields = ['user_profile']
@@ -240,7 +259,7 @@ class UserPlannerListAPIView(generics.ListAPIView): # To POST just change to Lis
     serializer_class = UserPlannerListSerializer
 
 
-class UserPlannerIDListAPIView(generics.ListCreateAPIView): 
+class UserPlannerIDListAPIView(generics.ListAPIView): 
     """
     This view its purpose its to list specific User Planner by User ID 
     """
@@ -257,13 +276,7 @@ class UserPlannerIDListAPIView(generics.ListCreateAPIView):
             filters['user_profile_id'] = user_profile_id
 
         return self.queryset.filter(**filters)
-
-    def get_serializer_class(self):
-        serializer_class = self.serializer_class
-        if self.request.method == "POST":
-            serializer_class = UserPlannerCreateDetailSerializer
-        return serializer_class
-
+ 
 
 class UserPlannerIDDetailsAPIView(generics.RetrieveUpdateDestroyAPIView):
     """

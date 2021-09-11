@@ -126,7 +126,7 @@ class UserPlanner(models.Model):
 
     # This field its sensitive, relation must be one to one from Auth User Table
     user_profile = models.ForeignKey(global_settings.AUTH_USER_MODEL, on_delete=PROTECT,related_name='user_planners')
-    plan_title = models.CharField(max_length=150, unique=True)
+    plan_title = models.CharField(max_length=150)
     week_num = models.IntegerField()
     
     PERIOD_TYPES = (

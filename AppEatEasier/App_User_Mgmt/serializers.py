@@ -160,8 +160,8 @@ class UserPlannerListSerializer(serializers.ModelSerializer):
     This serializer its purpose is to List Users Planners
     """
     # OJO !!! hay usar los parentesis al final de la clase por favor !!!
-    user_profile = UserListSerializer()
-
+    user_profile = UserListSerializer() #-> this can be optional or make an other serializer for retrieve - POST doesn´t need it
+                                            # because it´s going to try to create a new user as well
     class Meta:
         model = UserPlanner
         fields = ['id','user_profile','plan_title','period','start_date']
@@ -173,6 +173,16 @@ class UserPlannerDetailSerializer(serializers.ModelSerializer):
     """
 
     user_profile = UserListSerializer()
+
+    class Meta:
+        model = UserPlanner
+        fields = ['id','user_profile','plan_title','week_num','period','start_date','end_date','saved']
+
+
+class UserPlannerCreateDetailSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose its to get User Planner Details
+    """
 
     class Meta:
         model = UserPlanner

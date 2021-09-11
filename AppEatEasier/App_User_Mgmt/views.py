@@ -11,7 +11,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 # Serializers:
 from .serializers import (
     UserSerializer, UserDetailSerializer, UserListSerializer, UserMenuListSerializer, 
-    UserPlannerListSerializer, UserPlannerDetailSerializer, UserMenuDetailSerializer, 
+    UserPlannerListSerializer, UserPlannerDetailSerializer, UserPlannerCreateDetailSerializer, UserMenuDetailSerializer, 
     UserProfileSerializer, UserProfileAppSerializer, UserProfileEditAppsSerializer, UserProfileFoodSerializer, 
     UserProfileRecipeSerializer, UserFavoritesListSerializer, UserProfilePeopleQtySerializer,
     UserProfileEditFoodSerializer,
@@ -240,7 +240,7 @@ class UserPlannerListAPIView(generics.ListAPIView): # To POST just change to Lis
     serializer_class = UserPlannerListSerializer
 
 
-class UserPlannerIDListAPIView(generics.ListAPIView): 
+class UserPlannerIDListAPIView(generics.ListCreateAPIView): 
     """
     This view its purpose its to list specific User Planner by User ID 
     """
@@ -257,6 +257,12 @@ class UserPlannerIDListAPIView(generics.ListAPIView):
             filters['user_profile_id'] = user_profile_id
 
         return self.queryset.filter(**filters)
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+        if self.request.method == "POST":
+            serializer_class = UserPlannerCreateDetailSerializer
+        return serializer_class
 
 
 class UserPlannerIDDetailsAPIView(generics.RetrieveUpdateDestroyAPIView):

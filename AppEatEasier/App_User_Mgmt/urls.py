@@ -10,7 +10,8 @@ from App_SprMkt_Mgmt.views import SprMktListAPIView
 # Views:
 from .views import (
     UserAPIView, UserIDAuthTokenView, UserListAPIView, UserDetailsRetrieveUpdateAPIView, 
-    UserProfileQtyView, UserProfileAppsView, UserProfileFoodView, UserProfiledRecommendationsList,
+    UserProfileQtyView, UserProfileAppsView, UserProfileFoodView, 
+    UserProfiledRecommendationsList, UserProfileFavoriteListCreate,
     UserPlannerListCreateView,
     UserFavoriteIDListAPIView, UserPlannerIDListAPIView, UserPlannerIDDetailsAPIView,
     UserMenuListAPIView,UserMenuIDDetailsAPIView, UserProfileDetailAPIView, UserCreateAPIView
@@ -28,7 +29,8 @@ urlpatterns = [
     path('profiles/qty/', UserProfileQtyView.as_view()), # POST -> User Profile People Amount
     path('profiles/apps/', UserProfileAppsView.as_view()), # POST -> User Profile Food Preferences
     path('profiles/food/', UserProfileFoodView.as_view()), # POST -> User Profile Food Preferences
-    path('profiles/suggest/<int:pk>/', UserProfiledRecommendationsList.as_view()), # POST & Automatic Generation -> Processing
+    path('profiles/suggest/<int:pk>/', UserProfiledRecommendationsList.as_view()), # GET -> Automatic List of Suggestions
+    path('profiles/favorite/', UserProfileFavoriteListCreate.as_view()), # POST -> User Favorites Recipes Creation
     path('profiles/planner/', UserPlannerListCreateView.as_view()), # POST -> User New Menu Creation
     # Just for validate specific user views data
     path('<int:pk>/', UserDetailsRetrieveUpdateAPIView.as_view()),

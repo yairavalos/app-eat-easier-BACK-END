@@ -13,7 +13,7 @@ from .serializers import (
     UserRecipeDetailSerializer, UserSerializer, UserDetailSerializer, UserListSerializer, UserMenuListSerializer, 
     UserPlannerListSerializer, UserPlannerDetailSerializer, UserPlannerCreateDetailSerializer, UserMenuDetailSerializer, 
     UserProfileSerializer, UserProfileAppSerializer, UserProfileEditAppsSerializer, UserProfileFoodSerializer, 
-    UserProfileRecipeSerializer, UserFavoritesListSerializer, UserProfilePeopleQtySerializer,
+    UserProfileRecipeSerializer, UserFavoritesListSerializer, UserFavoritesListCreateSerializer, UserProfilePeopleQtySerializer,
     UserProfileEditFoodSerializer, UserRecipeListSerializer # -> to be reviewed
 )
 
@@ -202,6 +202,32 @@ class UserProfiledRecommendationsList(generics.ListAPIView):
             }
         )
 
+
+class UserProfileFavoriteListCreate(generics.ListCreateAPIView):
+    """
+    This view its purpose its to Save Suggested Recipes into User Favorites Table
+    """
+    pass
+
+    queryset = UserRecipe.objects.all()
+    serializer_class = UserFavoritesListCreateSerializer 
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['=user_profile__id']
+    ordering_fields = ['user_profile']
+    
+    def post(self, request):
+        data = request.data
+        
+        if isinstance(data, list):
+            serializer = self.get_serializer(data=data, many=True)
+        else:
+            serializer = self.get_serializer(data=data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------

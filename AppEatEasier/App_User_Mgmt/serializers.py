@@ -157,6 +157,21 @@ class UserFavoritesListSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class UserFavoritesListCreateSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to give the List of User´s Favorites Recipes
+    """
+
+    class Meta:
+        model = UserRecipe
+        fields = ['id','user_profile','cat_recipe','checked','favorite']
+
+    def create(self, validated_data):
+        print(validated_data)
+        user_apps = UserRecipe.objects.create(**validated_data)
+        return user_apps
+
+
 class UserPlannerListSerializer(serializers.ModelSerializer):
     """
     This serializer its purpose is to List Users Planners

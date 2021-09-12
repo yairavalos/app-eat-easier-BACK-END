@@ -30,7 +30,7 @@ urlpatterns = [
     path('profiles/apps/', UserProfileAppsView.as_view()), # POST -> User Profile Food Preferences
     path('profiles/food/', UserProfileFoodView.as_view()), # POST -> User Profile Food Preferences
     path('profiles/suggest/<int:pk>/', UserProfiledRecommendationsList.as_view()), # GET -> Automatic List of Suggestions
-    path('profiles/favorite/', UserProfileFavoriteListCreate.as_view()), # POST -> User Favorites Recipes Creation
+    path('profiles/favorite/', UserProfileFavoriteListCreate.as_view()), # GET / POST -> User Favorites Recipes Creation
     path('profiles/planner/', UserPlannerListCreateView.as_view()), # POST -> User New Menu Creation
     # path('profiles/planner/menu/' ,), # POST ----> SAVE User Menu <--------- More validation !!!!!!!
     # Just for validate specific user views data

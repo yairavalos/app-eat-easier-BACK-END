@@ -32,13 +32,14 @@ urlpatterns = [
     path('profiles/suggest/<int:pk>/', UserProfiledRecommendationsList.as_view()), # GET -> Automatic List of Suggestions
     path('profiles/favorite/', UserProfileFavoriteListCreate.as_view()), # POST -> User Favorites Recipes Creation
     path('profiles/planner/', UserPlannerListCreateView.as_view()), # POST -> User New Menu Creation
+    # path('profiles/planner/menu/' ,), # POST ----> SAVE User Menu <--------- More validation !!!!!!!
     # Just for validate specific user views data
     path('<int:pk>/', UserDetailsRetrieveUpdateAPIView.as_view()),
     path('<int:pk>/favorites/', UserFavoriteIDListAPIView.as_view()),
     path('<int:pk>/planners/', UserPlannerIDListAPIView.as_view()), 
     path('<int:pk>/profile/', UserProfileDetailAPIView.as_view()), 
     path('<int:user_profile_id>/planners/<int:pk>/', UserPlannerIDDetailsAPIView.as_view()),
-    path('<int:user_profile_id>/planners/<int:pk>/menu/', UserMenuListAPIView.as_view()),
+    path('<int:user_profile_id>/planners/<int:pk>/menu/', UserMenuListAPIView.as_view()), # --> GET -> Menu Viewer -> Display
     path('<int:user_profile_id>/planners/<int:user_planner_id>/menu/<int:pk>/', UserMenuIDDetailsAPIView.as_view()),
     path('<int:user_profile_id>/planners/<int:user_planner_id>/menu/sprmkt_list/', SprMktListAPIView.as_view()),
 ]

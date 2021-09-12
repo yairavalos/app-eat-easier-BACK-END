@@ -210,14 +210,22 @@ class UserProfileFavoriteListCreate(generics.ListCreateAPIView):
     pass
 
     queryset = UserRecipe.objects.all()
-    serializer_class = UserFavoritesListCreateSerializer 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['=user_profile__id']
     ordering_fields = ['user_profile']
     
+    def get_serializer_class(self):
+
+        if self.request.method == 'GET':
+            serializer_class = UserFavoritesListSerializer
+        
+        if self.request.method == 'POST':
+            serializer_class = UserFavoritesListCreateSerializer
+        return serializer_class
+
     def post(self, request):
         data = request.data
-        
+
         if isinstance(data, list):
             serializer = self.get_serializer(data=data, many=True)
         else:

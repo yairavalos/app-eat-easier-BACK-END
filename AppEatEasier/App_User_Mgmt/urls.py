@@ -14,7 +14,8 @@ from .views import (
     UserProfiledRecommendationsList, UserProfileFavoriteListCreate,
     UserPlannerListCreateView,
     UserFavoriteIDListAPIView, UserPlannerIDListAPIView, UserPlannerIDDetailsAPIView,
-    UserMenuListAPIView,UserMenuIDDetailsAPIView, UserProfileDetailAPIView, UserCreateAPIView
+    UserMenuListAPIView, UserMenuListCreateView,
+    UserMenuIDDetailsAPIView, UserProfileDetailAPIView, UserCreateAPIView
     )
 
 app_name = "App_User_Mgmt"
@@ -32,7 +33,7 @@ urlpatterns = [
     path('profiles/suggest/<int:pk>/', UserProfiledRecommendationsList.as_view()), # GET -> Automatic List of Suggestions
     path('profiles/favorite/', UserProfileFavoriteListCreate.as_view()), # GET / POST -> User Favorites Recipes Creation
     path('profiles/planner/', UserPlannerListCreateView.as_view()), # POST -> User New Menu Creation
-    # path('profiles/planner/menu/' ,), # POST ----> SAVE User Menu <--------- More validation !!!!!!!
+    path('profiles/planner/menu/', UserMenuListCreateView.as_view(),), # POST ----> SAVE User Menu <--------- More validation !!!!!!!
     # Just for validate specific user views data
     path('<int:pk>/', UserDetailsRetrieveUpdateAPIView.as_view()),
     path('<int:pk>/favorites/', UserFavoriteIDListAPIView.as_view()),

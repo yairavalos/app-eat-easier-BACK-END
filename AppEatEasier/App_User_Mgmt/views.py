@@ -14,7 +14,7 @@ from .serializers import (
     UserPlannerListSerializer, UserPlannerDetailSerializer, UserPlannerCreateDetailSerializer, UserMenuDetailSerializer, 
     UserProfileSerializer, UserProfileAppSerializer, UserProfileEditAppsSerializer, UserProfileFoodSerializer, 
     UserProfileRecipeSerializer, UserFavoritesListSerializer, UserFavoritesListCreateSerializer, UserProfilePeopleQtySerializer,
-    UserProfileEditFoodSerializer, UserRecipeListSerializer # -> to be reviewed
+    UserProfileEditFoodSerializer, UserRecipeListSerializer, UserMenuDetailCreateSerializer # -> to be reviewed
 )
 
 from App_Recipe_Mgmt.serializers import UserSuggestionListSerializer
@@ -281,6 +281,122 @@ class UserPlannerListCreateView(generics.ListCreateAPIView): # To POST New Menu�
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserMenuListCreateView(generics.ListCreateAPIView):
+    """
+    This view its purpose its to handle User´s Menú Planner Recipes by day and time 
+
+    This is a just one step before to create The Super Market List
+    """
+
+    queryset = UserMenu.objects.all()
+    serializer_class = UserMenuDetailCreateSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['=user_profile__id']
+    ordering_fields = ['user_profile']
+
+    def post(self, request):
+        data = request.data
+        
+        if isinstance(data, list):
+            serializer = self.get_serializer(data=data, many=True)
+        else:
+            serializer = self.get_serializer(data=data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------
+#
+# USER EXTRAS FOR MANUAL SEARCHING AND VALIDATIONS
+#
+# ------------------------------------------------------------------------------------------------------------------------------------
+
+
+class UserFavoriteIDListAPIView(generics.ListAPIView): # To POST just change to ListCreateAPIView
+    """
+    This view its purpose is to list total User´s Favorites from Recipe´s Catalog
+    """
+
+    serializer_class = UserFavoritesListSerializer
+
+    def get_queryset(self):
+
+        user_profile_id = self.kwargs['pk']
+        filter = {}
+
+        if user_profile_id:
+            filter['user_profile_id'] = user_profile_id
+            filter['favorite'] = True
+
+        return UserRecipe.objects.filter(**filter)
+
+
+
+class UserProfileDetailAPIView(generics.ListAPIView):
+    """
+    This view its purpose its to retrieve full user profile including preferences
+    """
+    
+    def get_queryset(self):
+
+        user_id = self.kwargs['pk']
+        filter = {}
+
+        if user_id:
+            filter['user_profile_id'] = user_id
+
+        return UserProfile.objects.filter(**filter)
+
+    def get_queryset_apps(self):
+
+        user_id = self.kwargs['pk']
+        filter = {}
+
+        if user_id:
+            filter['user_profile_id'] = user_id
+
+        return UserApp.objects.filter(**filter)
+
+    def get_queryset_foods(self):
+
+        user_id = self.kwargs['pk']
+        filter = {}
+
+        if user_id:
+            filter['user_profile_id'] = user_id
+
+        return UserFood.objects.filter(**filter)
+
+    def get_queryset_recipes(self):
+
+        user_id = self.kwargs['pk']
+        filter = {}
+
+        if user_id:
+            filter['user_profile_id'] = user_id
+
+        return UserRecipe.objects.filter(**filter)
+
+    def list(self, request, *args, **kwargs):
+        user_profile = UserProfileSerializer(self.get_queryset(), many=True)
+        user_profile_apps = UserProfileAppSerializer(self.get_queryset_apps(), many=True)
+        user_profile_foods = UserProfileFoodSerializer(self.get_queryset_foods(), many=True)
+        user_profile_recipes = UserProfileRecipeSerializer(self.get_queryset_recipes(), many=True)
+
+        return Response(
+            {
+            "user_profile": user_profile.data,
+            "user_profile_apps": user_profile_apps.data,
+            "user_profile_foods": user_profile_foods.data,
+            "user_profile_recipes": user_profile_recipes.data
+            }
+        )
+
 
 class UserPlannerIDListAPIView(generics.ListAPIView): 
     """
@@ -373,92 +489,3 @@ class UserMenuIDDetailsAPIView(generics.RetrieveUpdateDestroyAPIView):
 
         return self.queryset.filter(**filters_dict)
 
-
-
-
-# ------------------------------------------------------------------------------------------------------------------------------------
-#
-# USER EXTRAS
-#
-# ------------------------------------------------------------------------------------------------------------------------------------
-
-
-class UserFavoriteIDListAPIView(generics.ListAPIView): # To POST just change to ListCreateAPIView
-    """
-    This view its purpose is to list total User´s Favorites from Recipe´s Catalog
-    """
-
-    serializer_class = UserFavoritesListSerializer
-
-    def get_queryset(self):
-
-        user_profile_id = self.kwargs['pk']
-        filter = {}
-
-        if user_profile_id:
-            filter['user_profile_id'] = user_profile_id
-            filter['favorite'] = True
-
-        return UserRecipe.objects.filter(**filter)
-
-
-
-class UserProfileDetailAPIView(generics.ListAPIView):
-    """
-    This view its purpose its to retrieve full user profile including preferences
-    """
-    
-    def get_queryset(self):
-
-        user_id = self.kwargs['pk']
-        filter = {}
-
-        if user_id:
-            filter['user_profile_id'] = user_id
-
-        return UserProfile.objects.filter(**filter)
-
-    def get_queryset_apps(self):
-
-        user_id = self.kwargs['pk']
-        filter = {}
-
-        if user_id:
-            filter['user_profile_id'] = user_id
-
-        return UserApp.objects.filter(**filter)
-
-    def get_queryset_foods(self):
-
-        user_id = self.kwargs['pk']
-        filter = {}
-
-        if user_id:
-            filter['user_profile_id'] = user_id
-
-        return UserFood.objects.filter(**filter)
-
-    def get_queryset_recipes(self):
-
-        user_id = self.kwargs['pk']
-        filter = {}
-
-        if user_id:
-            filter['user_profile_id'] = user_id
-
-        return UserRecipe.objects.filter(**filter)
-
-    def list(self, request, *args, **kwargs):
-        user_profile = UserProfileSerializer(self.get_queryset(), many=True)
-        user_profile_apps = UserProfileAppSerializer(self.get_queryset_apps(), many=True)
-        user_profile_foods = UserProfileFoodSerializer(self.get_queryset_foods(), many=True)
-        user_profile_recipes = UserProfileRecipeSerializer(self.get_queryset_recipes(), many=True)
-
-        return Response(
-            {
-            "user_profile": user_profile.data,
-            "user_profile_apps": user_profile_apps.data,
-            "user_profile_foods": user_profile_foods.data,
-            "user_profile_recipes": user_profile_recipes.data
-            }
-        )

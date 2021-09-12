@@ -251,3 +251,13 @@ class UserMenuDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMenu
         fields = ['id','user_planner','meal_date','meal_type','user_recipe','done']
+
+
+class UserMenuDetailCreateSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to get User Menu according to a given User Planner ID
+    """
+
+    class Meta:
+        model = UserMenu
+        fields = ['id','user_planner','meal_date','meal_type','user_recipe','done']

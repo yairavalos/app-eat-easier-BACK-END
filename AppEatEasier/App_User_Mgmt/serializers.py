@@ -1,5 +1,6 @@
 # Standard Libraries and Packages
 
+# from AppEatEasier.App_Recipe_Mgmt.models import CatalogRecipe
 from django.db import models
 from django.db.models import fields
 from rest_framework import serializers

@@ -15,22 +15,19 @@ from .serializers import (
 # Models:
 from .models import CatalogRecipe, RecipeApp, RecipeIngredient, RecipeProcedure
 
+
+# ------------------------------------------------------------------------------------------------------------------------------------
+#
+# RECIPE LIST VIEWS
+#
+# ------------------------------------------------------------------------------------------------------------------------------------
+
+
 # Create your views here.
 class RecipeAPIView(APIView):
 
     def get(self, request):
         return Response("This is Recipe Main View")
-
-
-class RecipeIngredientListAPIView(generics.ListAPIView):
-    """
-    This View bring a list of available Ingredient´s Catalog
-    """
-
-    queryset = RecipeIngredient.objects.all()
-    serializer_class = CatalogRecipeIngredientsSerializer
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['cat_ingredient__ingredient_name','cat_ingredient__ingredient_cat']
 
 
 class RecipeListAPIView(generics.ListCreateAPIView):
@@ -62,6 +59,26 @@ class RecipeDetailsAPIView(generics.ListCreateAPIView):
             filter['id'] = recipe_id
 
         return CatalogRecipe.objects.filter(**filter)
+
+
+
+class RecipeIngredientListAPIView(generics.ListAPIView):
+    """
+    This View bring a list of available Ingredient´s Catalog
+    """
+
+    queryset = RecipeIngredient.objects.all()
+    serializer_class = CatalogRecipeIngredientsSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['cat_ingredient__ingredient_name','cat_ingredient__ingredient_cat']
+
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------
+#
+# FULL RECIPE VIEWER WITH ALL DETAILS FROM DIFFERENT SERIALIZERS
+#
+# ------------------------------------------------------------------------------------------------------------------------------------
 
 
 class RecipeDetailedViewerAPIView(generics.ListAPIView):

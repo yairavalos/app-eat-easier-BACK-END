@@ -11,6 +11,13 @@ from App_SprMkt_Mgmt.models import UnitsConvertion
 
 # Serializers definition
 
+# ------------------------------------------------------------------------------------------------------------------------------------
+#
+# RECIPE MANAGEMENT SERIALIZERS
+#
+# ------------------------------------------------------------------------------------------------------------------------------------
+
+
 class CatalogRecipeSerializer(serializers.ModelSerializer):
     """
     This serializer is going to help to bring the full List of recipes from Recipe´s Catalog 
@@ -62,3 +69,23 @@ class CatalogRecipeProcedureSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeProcedure
         fields = ['id','cat_recipe','proc_descrip','pic_url']
+
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------
+#
+# USER PROFILED RECOMMENDATIONS / AUTOMATIC PROCESSING
+#
+# ------------------------------------------------------------------------------------------------------------------------------------
+
+
+class UserSuggestionListSerializer(serializers.ModelSerializer):
+    """
+    This serializer its purpose is to give a list of suggestions according with User´s Food Preferences
+    """
+
+    class Meta:
+        model = CatalogRecipe
+        fields = ['id','recipe_category','title','meal_type','level','pic_url']
+        depth = 1
+

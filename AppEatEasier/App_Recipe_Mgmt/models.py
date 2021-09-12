@@ -39,8 +39,21 @@ class CatalogRecipe(models.Model):
         ('merienda','Merienda'),
         ('cena','Cena'),
     )
-
     meal_type = models.CharField(max_length=30, choices=MEAL_TYPES)
+    
+    FOOD_TYPES = (
+        ('res','Res'),
+        ('pollo','Pollo'),
+        ('cerdo','Cerdo'),
+        ('pescado','Pescado'),
+        ('huevo','Huevo'),
+        ('lacteos','Lacteos'),
+        ('frutas','Frutas'),
+        ('verduras','Verduras'),
+        ('gluten','Gluten'),
+    )
+    food_type = models.CharField(max_length=30, choices=FOOD_TYPES)  
+    
     description = models.TextField()
     persons = models.IntegerField()
 

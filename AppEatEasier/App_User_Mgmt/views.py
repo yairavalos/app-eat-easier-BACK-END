@@ -196,11 +196,7 @@ class UserProfiledRecommendationsList(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         user_profile_recipes = UserSuggestionListSerializer(self.get_queryset_recipe_foods(), many=True)
 
-        return Response(
-            {
-            "user_profile_recipes": user_profile_recipes.data
-            }
-        )
+        return Response(user_profile_recipes.data)
 
 
 class UserProfileFavoriteListCreate(generics.ListCreateAPIView):

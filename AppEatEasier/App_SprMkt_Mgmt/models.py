@@ -80,15 +80,16 @@ class CatalogIngredient(models.Model):
 # Required to obtain menu id to link it to the Foreign Key
 from App_User_Mgmt.models import UserPlanner
 
+
 # New Table to Generate Super Market List
 # ------------------------------------------------------------------------------------------
-
-"""
 class ShoppingList(models.Model):
+    """
     Table to Dump the Shopping List Results
+    """
 
-    user_planner = models.ForeignKey(UserPlanner, on_delete=PROTECT,related_name='shopping_lists')
-    ingredient_qty
+    user_planner = models.ForeignKey(UserPlanner, on_delete=PROTECT, related_name='shopping_lists')
+    ingredient_qty = models.FloatField()
     
     UNITS_DESC = (
         ('ml','mililitros'),
@@ -98,14 +99,12 @@ class ShoppingList(models.Model):
     )
     unit_desc = models.CharField(max_length=50, choices=UNITS_DESC)
     
-    ingredient_name
-    check
+    ingredient = models.ForeignKey(CatalogIngredient, on_delete=PROTECT, related_name='shopping_lists')
+    check = models.BooleanField(default=False)
 
     # String function to get a readable object description
     def __str__(self) -> str:
-        return f'{self.ingredient_name}'
-
-"""
+        return f'{self.user_planner} {self.ingredient_qty} {self.unit_desc} de {self.ingredient}'
 
 
 

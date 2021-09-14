@@ -6,10 +6,17 @@ from rest_framework import serializers
 from App_User_Mgmt.serializers import UserPlannerListSerializer
 
 # Models
-from .models import SprmktList, SprmktPackaging, CatalogPackage, CatalogIngredient, UnitsConvertion
+from .models import ShoppingList, SprmktList, SprmktPackaging, CatalogPackage, CatalogIngredient, UnitsConvertion
 
 
 # Serializers Definition
+
+# ------------------------------------------------------------------------------------------------------------------------------------
+#
+# CURRENT VERSION SIMPLE MARKET SHOPPING LIST
+#
+# ------------------------------------------------------------------------------------------------------------------------------------
+
 
 class SprMktUnitConvertion(serializers.ModelSerializer):
     """
@@ -29,6 +36,24 @@ class SprMktIngredientList(serializers.ModelSerializer):
     class Meta:
         model = CatalogIngredient
         fields = ['ingredient_name']
+
+
+class SprMktShoppingList(serializers.ModelSerializer):
+    """
+    This serializer help us to deal with Super Market Shopping List Generation
+    """
+
+    class Meta:
+        model = ShoppingList
+        fields = ['id','user_planner','ingredient_qty','unit_desc', 'ingredient','check']
+
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------
+#
+# NEXT VERSION WITH SUPERMARKET API CONNECTION
+#
+# ------------------------------------------------------------------------------------------------------------------------------------
 
 
 class SprMktPacksListSerializer(serializers.ModelSerializer):

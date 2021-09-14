@@ -98,15 +98,17 @@ WSGI_APPLICATION = 'AppEatEasier.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # For testing purposes
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # <<< -- Falta cambiar esto
         'NAME': BASE_DIR / 'db.sqlite3', # <<< --- cambiar este, como NO es en red lo demás se puede comentar | DEBE ser la dirección | BASE_DIR / "db.sqlite3"
     }
 }
+"""
 
 # For production purposes
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # <<< -- Falta cambiar esto
@@ -117,7 +119,6 @@ DATABASES = {
         'PORT': os.getenv("DB_PORT"),
     }
 }
-"""
 
 
 # Password validation

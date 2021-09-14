@@ -1,11 +1,15 @@
 # Standard Libraries and Packages:
 
+# Rest Framework
 from rest_framework import status
 from rest_framework import generics, serializers, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
+
+# Django 
+from django.db.models import Sum, Count, F
 from django_filters.rest_framework import DjangoFilterBackend
 
 # Serializers:
@@ -17,12 +21,17 @@ from .serializers import (
     UserProfileEditFoodSerializer, UserRecipeListSerializer, UserMenuDetailCreateSerializer # -> to be reviewed
 )
 
+# External Serializers:
 from App_Recipe_Mgmt.serializers import UserSuggestionListSerializer
-
+from App_SprMkt_Mgmt.serializers import SprMktShoppingList
 
 # Models:
 from .models import User, UserProfile, UserApp, UserFood, UserRecipe, UserMenu, UserPlanner
+
+# External Models:
 from App_Recipe_Mgmt.models import CatalogRecipe, RecipeApp, RecipeIngredient
+from App_SprMkt_Mgmt.models import ShoppingList
+
 
 # Create your views here.
 
@@ -174,7 +183,7 @@ class UserProfiledRecommendationsList(generics.ListAPIView):
     This view its purpose its to provide an automatic list of suggestions based on user profile preferences
     """
     
-    queryset = UserRecipe.objects.all() # -> In the meanwhile, its just fine
+    queryset = UserRecipe.objects.all() # -> In the meantime, its just fine
     serializer_class = UserSuggestionListSerializer # -> Its NOT well Defined, need to be reviewed
     
 
@@ -316,16 +325,68 @@ class UserMenuListCreateView(generics.ListCreateAPIView):
     NEW CODE IS JOIN TO BE CREATED HERE FOR SUPERMARKET SHOPPING LIST
 """
 
-from django.db.models import Sum, Count, F
+class UserShoppingListView(generics.ListAPIView):
+    """
+    This view its purpose its to handle User´s Menú Planner Recipes by day and time
+    """
 
-recipe_list = [1,2,3,4]
-recipe_ingredients = RecipeIngredient.objects.all()
+    queryset = ShoppingList.objects.all()
+    serializer_class = SprMktShoppingList
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['=user_profile__id']
+    ordering_fields = ['user_profile']
 
-result5 = recipe_ingredients.values('cat_recipe__title','cat_ingredient_id__ingredient_name', 'ingredient_qty', 'unit_type__equivalency','unit_type__unit_value','unit_type__unit_desc').order_by('cat_ingredient_id').annotate(sum_qty=Sum('ingredient_qty'))
-result8 = recipe_ingredients.values('cat_ingredient_id__ingredient_name').distinct().order_by('cat_ingredient_id').annotate(sum_qty=Sum('ingredient_qty'))
-result14 = recipe_ingredients.values('cat_ingredient_id__ingredient_cat','cat_ingredient_id__ingredient_name','ingredient_qty','unit_type__unit_value','unit_type__unit_desc').order_by('cat_ingredient_id__ingredient_cat').annotate(std_value=(F('ingredient_qty')*F('unit_type__unit_value')))
-result15 = result14.values('cat_ingredient_id','unit_type_id__unit_desc').distinct().order_by('cat_ingredient_id__ingredient_cat').annotate(myTotal = Sum('std_value'))
-result16 = result14.values('cat_ingredient_id__ingredient_cat','cat_ingredient_id__ingredient_name','unit_type_id__unit_desc').distinct().order_by('cat_ingredient_id__ingredient_cat').annotate(myTotal = Sum('std_value'))
+    def get_queryset_shopping_list(self):
+        """
+        New code goes here
+        """
+        user_planner_id = self.kwargs['pk']
+        filter = {}
+
+        if user_planner_id:
+            filter['id'] = user_planner_id
+
+        # retrieve the given user planner by id
+        user_planner_list = UserPlanner.objects.filter(**filter)
+        print('-'*120)
+        [print(item) for item in user_planner_list]
+        print(user_planner_list.last().__dict__)
+
+        # retrieve all the related menu´s items to given user_planner_id
+        user_menu_list = UserMenu.objects.filter(user_planner__in=user_planner_list)
+        print('-'*120)
+        [print(item) for item in user_menu_list.values()]
+
+        # retrieve the recipes id from main catalog given on each menu item to made a list of user´s recipes
+        user_recipe_list = user_menu_list.values('user_recipe_id__cat_recipe_id')
+        print('-'*120)
+        [print(item) for item in user_recipe_list]
+
+        # retrieve the regarding recipe´s ingredients list
+        recipe_ingredients = RecipeIngredient.objects.filter(cat_recipe__in=user_recipe_list)
+        print('-'*120)
+        [print(item) for item in recipe_ingredients.values()]
+
+        # This operation multiply ingredient qty by their equivalent value of standardized units
+        result14 = recipe_ingredients.values('cat_ingredient_id__ingredient_cat','cat_ingredient_id__ingredient_name','ingredient_qty','unit_type__unit_value','unit_type__unit_desc').order_by('cat_ingredient_id__ingredient_cat').annotate(std_value=(F('ingredient_qty')*F('unit_type__unit_value')))
+        print('-'*120)
+        [print(item) for item in result14.values()]
+
+        # This operation sum all the values of the same ingredient in the list
+        result16 = result14.values('cat_ingredient_id__ingredient_cat','cat_ingredient_id__ingredient_name','unit_type_id__unit_desc').distinct().order_by('cat_ingredient_id__ingredient_cat').annotate(myTotal = Sum('std_value'))
+        print('-'*120)
+        [print(item) for item in result16]
+
+        return result16
+
+    def list(self, request, *args, **kwargs):
+        """
+        New code goes here
+        """
+        
+        #user_shopping_list = SprMktShoppingList(self.get_queryset_shopping_list(), many=True)
+        user_shopping_list = self.get_queryset_shopping_list()
+        return Response(user_shopping_list) #.data
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------
@@ -507,3 +568,24 @@ class UserMenuIDDetailsAPIView(generics.RetrieveUpdateDestroyAPIView):
 
         return self.queryset.filter(**filters_dict)
 
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------
+#
+# USER EXTRAS FOR MANUAL SEARCHING AND VALIDATIONS
+#
+# ------------------------------------------------------------------------------------------------------------------------------------
+
+
+"""
+    JUST SOME CODE BACKUP
+"""
+
+recipe_list = [1,2,3,4]
+recipe_ingredients = RecipeIngredient.objects.all()
+
+result5 = recipe_ingredients.values('cat_recipe__title','cat_ingredient_id__ingredient_name', 'ingredient_qty', 'unit_type__equivalency','unit_type__unit_value','unit_type__unit_desc').order_by('cat_ingredient_id').annotate(sum_qty=Sum('ingredient_qty'))
+result8 = recipe_ingredients.values('cat_ingredient_id__ingredient_name').distinct().order_by('cat_ingredient_id').annotate(sum_qty=Sum('ingredient_qty'))
+result14 = recipe_ingredients.values('cat_ingredient_id__ingredient_cat','cat_ingredient_id__ingredient_name','ingredient_qty','unit_type__unit_value','unit_type__unit_desc').order_by('cat_ingredient_id__ingredient_cat').annotate(std_value=(F('ingredient_qty')*F('unit_type__unit_value')))
+result15 = result14.values('cat_ingredient_id','unit_type_id__unit_desc').distinct().order_by('cat_ingredient_id__ingredient_cat').annotate(myTotal = Sum('std_value'))
+result16 = result14.values('cat_ingredient_id__ingredient_cat','cat_ingredient_id__ingredient_name','unit_type_id__unit_desc').distinct().order_by('cat_ingredient_id__ingredient_cat').annotate(myTotal = Sum('std_value'))

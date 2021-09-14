@@ -5,6 +5,13 @@ from django.db.models.deletion import PROTECT
 
 # Create your models here.
 
+# ------------------------------------------------------------------------------------------------------------------------------------
+#
+# CURRENT VERSION SIMPLE MARKET SHOPPING LIST
+#
+# ------------------------------------------------------------------------------------------------------------------------------------
+
+
 class UnitsConvertion(models.Model):
 
     """
@@ -37,30 +44,7 @@ class UnitsConvertion(models.Model):
         return f'{self.equivalency}'
 
 
-class CatalogPackage(models.Model):
-
-    """
-    Table to refer to The Package´s Catalog
-
-    Manager privileges needed to load this table through Admin interface
-    """
-
-    package_desc = models.CharField(max_length=50, unique=True)
-    moq_value = models.FloatField()
-
-    CONT_TYPE = (
-        ('pack','Package'),
-        ('container','Container'),
-        ('bulk','Bulk'),
-    )
-
-    container_type = models.CharField(max_length=30, choices=CONT_TYPE)
-
-    # String function to get a readable object description
-    def __str__(self) -> str:
-        return f'{self.package_desc}'
-
-
+# Maybe is better just add a field -> Type of distribution -> Bulk / Packing / Piece
 class CatalogIngredient(models.Model):
 
     """
@@ -90,6 +74,69 @@ class CatalogIngredient(models.Model):
     # String function to get a readable object description
     def __str__(self) -> str:
         return f'{self.ingredient_name}'
+
+
+# Import between Apps
+# Required to obtain menu id to link it to the Foreign Key
+from App_User_Mgmt.models import UserPlanner
+
+# New Table to Generate Super Market List
+# ------------------------------------------------------------------------------------------
+
+"""
+class ShoppingList(models.Model):
+    Table to Dump the Shopping List Results
+
+    user_planner = models.ForeignKey(UserPlanner, on_delete=PROTECT,related_name='shopping_lists')
+    ingredient_qty
+    
+    UNITS_DESC = (
+        ('ml','mililitros'),
+        ('gm','gramos'),
+        ('l','litros'),
+        ('kg','kilogramos'),
+    )
+    unit_desc = models.CharField(max_length=50, choices=UNITS_DESC)
+    
+    ingredient_name
+    check
+
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.ingredient_name}'
+
+"""
+
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------
+#
+# NEXT VERSION WITH SUPERMARKET API CONNECTION
+#
+# ------------------------------------------------------------------------------------------------------------------------------------
+
+class CatalogPackage(models.Model):
+
+    """
+    Table to refer to The Package´s Catalog
+
+    Manager privileges needed to load this table through Admin interface
+    """
+
+    package_desc = models.CharField(max_length=50, unique=True)
+    moq_value = models.FloatField()
+
+    CONT_TYPE = (
+        ('pack','Package'),
+        ('container','Container'),
+        ('bulk','Bulk'),
+    )
+
+    container_type = models.CharField(max_length=30, choices=CONT_TYPE)
+
+    # String function to get a readable object description
+    def __str__(self) -> str:
+        return f'{self.package_desc}'
 
 
 class SprmktDept(models.Model):
@@ -132,10 +179,6 @@ class SprmktPackaging(models.Model):
     def __str__(self) -> str:
         return f'{self.ingredient} {self.additional_desc} {self.package_type} de {self.spq_value} {self.unit_type}'
 
-
-# Import between Apps
-# Required to obtain menu id to link it to the Foreign Key
-from App_User_Mgmt.models import UserPlanner
 
 class SprmktList(models.Model):
 

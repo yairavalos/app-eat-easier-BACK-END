@@ -308,6 +308,28 @@ class UserMenuListCreateView(generics.ListCreateAPIView):
 
 # ------------------------------------------------------------------------------------------------------------------------------------
 #
+# USER SUPERMARKET SHOPPING LIST GENERATION
+#
+# ------------------------------------------------------------------------------------------------------------------------------------
+
+"""
+    NEW CODE IS JOIN TO BE CREATED HERE FOR SUPERMARKET SHOPPING LIST
+"""
+
+from django.db.models import Sum, Count, F
+
+recipe_list = [1,2,3,4]
+recipe_ingredients = RecipeIngredient.objects.all()
+
+result5 = recipe_ingredients.values('cat_recipe__title','cat_ingredient_id__ingredient_name', 'ingredient_qty', 'unit_type__equivalency','unit_type__unit_value','unit_type__unit_desc').order_by('cat_ingredient_id').annotate(sum_qty=Sum('ingredient_qty'))
+result8 = recipe_ingredients.values('cat_ingredient_id__ingredient_name').distinct().order_by('cat_ingredient_id').annotate(sum_qty=Sum('ingredient_qty'))
+result14 = recipe_ingredients.values('cat_ingredient_id__ingredient_cat','cat_ingredient_id__ingredient_name','ingredient_qty','unit_type__unit_value','unit_type__unit_desc').order_by('cat_ingredient_id__ingredient_cat').annotate(std_value=(F('ingredient_qty')*F('unit_type__unit_value')))
+result15 = result14.values('cat_ingredient_id','unit_type_id__unit_desc').distinct().order_by('cat_ingredient_id__ingredient_cat').annotate(myTotal = Sum('std_value'))
+result16 = result14.values('cat_ingredient_id__ingredient_cat','cat_ingredient_id__ingredient_name','unit_type_id__unit_desc').distinct().order_by('cat_ingredient_id__ingredient_cat').annotate(myTotal = Sum('std_value'))
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------
+#
 # USER EXTRAS FOR MANUAL SEARCHING AND VALIDATIONS
 #
 # ------------------------------------------------------------------------------------------------------------------------------------

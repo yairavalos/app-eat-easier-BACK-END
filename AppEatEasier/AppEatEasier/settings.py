@@ -28,7 +28,10 @@ DEBUG = bool(os.getenv("DJANGO_DEBUG",True))
 
 # CORS HEADERS Parameters Config
 ALLOWED_HOSTS = ["*"]
-CORS_ORIGIN_ALLOW_ALL = True
+# This param has changed between the version, take Note !!
+CORS_ALLOW_ALL_ORIGINS = True
+# This config allow us to make local testings
+CORS_ALLOWED_ORIGINS = ["http://localhost:5500"]
 
 
 # Application definition
@@ -42,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # REST Libraries
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
     'corsheaders',
     # My Own Apps
@@ -53,13 +57,21 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # Special Note: CORS needs to be at the first lines
+    'corsheaders.middleware.CorsMiddleware',
+    # In this case, above of Common
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.TokenAuthentication",
+    ),
+}
 
 ROOT_URLCONF = 'AppEatEasier.urls'
 
@@ -85,11 +97,23 @@ WSGI_APPLICATION = 'AppEatEasier.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# For testing purposes
+"""
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
+        'ENGINE': 'django.db.backends.sqlite3', # <<< -- Falta cambiar esto
+        'NAME': BASE_DIR / 'db.sqlite3', # <<< --- cambiar este, como NO es en red lo demás se puede comentar | DEBE ser la dirección | BASE_DIR / "db.sqlite3"
+    }
+}
+"""
+
+# For production purposes
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # <<< -- Falta cambiar esto
+        'NAME': os.getenv("DB_NAME"), # <<< --- cambiar este, como NO es en red lo demás se puede comentar | DEBE ser la dirección | BASE_DIR / "db.sqlite3"
+        'USER': os.getenv("DB_USER"), # no lo va a necesitar para sqlite
         'PASSWORD': os.getenv("DB_PASSWORD"),
         'HOST': os.getenv("DB_HOST"),
         'PORT': os.getenv("DB_PORT"),

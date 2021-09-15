@@ -19,7 +19,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 # Views:
-from .views import CoreAPIView, CoreListAPIView
+from .views import CoreAPIView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

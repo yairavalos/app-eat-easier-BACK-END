@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 # Views:
-from .views import SprMktAPIView, SprMktListAPIView
+from .views import SprMktAPIView
 
 app_name = "App_SprMkt_Mgmt"
 

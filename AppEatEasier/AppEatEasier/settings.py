@@ -24,7 +24,7 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv("DJANGO_DEBUG",True))
+DEBUG = bool(os.getenv("DJANGO_DEBUG",False))
 
 # CORS HEADERS Parameters Config
 ALLOWED_HOSTS = ["*"]
@@ -98,20 +98,20 @@ WSGI_APPLICATION = 'AppEatEasier.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # For testing purposes
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # <<< -- Falta cambiar esto
         'NAME': BASE_DIR / 'db.sqlite3', # <<< --- cambiar este, como NO es en red lo demás se puede comentar | DEBE ser la dirección | BASE_DIR / "db.sqlite3"
     }
 }
-"""
+
 
 # For production purposes
-
+"""
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # <<< -- Falta cambiar esto
+        'ENGINE': 'django.db.backends.postgresql', # _psycopg2', # <<< -- Esto cambió a partir de la version 1.9
         'NAME': os.getenv("DB_NAME"), # <<< --- cambiar este, como NO es en red lo demás se puede comentar | DEBE ser la dirección | BASE_DIR / "db.sqlite3"
         'USER': os.getenv("DB_USER"), # no lo va a necesitar para sqlite
         'PASSWORD': os.getenv("DB_PASSWORD"),
@@ -119,7 +119,7 @@ DATABASES = {
         'PORT': os.getenv("DB_PORT"),
     }
 }
-
+"""
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

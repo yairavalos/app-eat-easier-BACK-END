@@ -267,7 +267,7 @@ class UserPlannerListCreateView(generics.ListCreateAPIView): # To POST New MenuÂ
     queryset = UserPlanner.objects.all()
     serializer_class = UserPlannerCreateDetailSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['=user_profile__id']
+    search_fields = ['=user_profile__id','=id']
     ordering_fields = ['user_profile']
     
 
@@ -296,7 +296,7 @@ class UserMenuListCreateView(generics.ListCreateAPIView):
     queryset = UserMenu.objects.all()
     serializer_class = UserMenuDetailCreateSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['=user_profile__id']
+    search_fields = ['=user_planner__id','user_planner__user_profile__id']
     ordering_fields = ['user_profile']
 
     def post(self, request):
